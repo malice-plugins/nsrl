@@ -1,4 +1,4 @@
-![NSRL logo](https://raw.githubusercontent.com/malice/malice-nsrl/master/logo.png)
+![NSRL logo](https://raw.githubusercontent.com/maliceio/malice-nsrl/master/logo.png)
 # malice-nsrl
 
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
