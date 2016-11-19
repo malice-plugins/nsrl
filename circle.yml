@@ -1,0 +1,27 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  cache_directories:
+    - "~/docker"
+  override:
+    - docker info
+    - if [[ -e ~/docker/image.tar ]]; then docker load --input ~/docker/image.tar; fi
+    - docker build -t malice_nsrl .
+    - mkdir -p ~/docker; docker save malice_nsrl > ~/docker/image.tar
+
+test:
+  override:
+    - docker images malice_nsrl
+    - docker run malice_nsrl -t 60B7C0FEAD45F2066E5B805A91F4F0FC
+
+deployment:
+  # master:
+  #   branch: master
+  #   commands:
+  #     - eval $(docker run gliderlabs/pagebuilder circleci-cmd)
+  release:
+    branch: release
+    commands:
+      - make release

@@ -2,9 +2,13 @@
 .git*
 .gitignore
 
-nsrl/.DS_Store
 .DS_Store
 logo.png
-README.md
 *.txt
+CHANGELOG.md
 LICENSE
+Makefile
+README.md
+README.md.bu
+VERSION
+circle.yml
