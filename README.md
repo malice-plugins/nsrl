@@ -29,7 +29,7 @@ Usage: nsrl [OPTIONS] COMMAND [arg...]
 
 Malice nsrl Plugin
 
-Version: v0.1.0, BuildTime: 20160214
+Version: v0.1.0, BuildTime: 20161119
 
 Author:
   blacktop - <https://github.com/blacktop>

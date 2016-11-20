@@ -92,7 +92,7 @@ func buildFilter() {
 	nsrlDB.Close()
 	// write line count to file LINECOUNT
 	buf := new(bytes.Buffer)
-	utils.Assert(binary.Write(buf, binary.LittleEndian, lines))
+	utils.Assert(binary.Write(buf, binary.LittleEndian, uint64(lines)))
 	utils.Assert(ioutil.WriteFile("/nsrl/LINECOUNT", buf.Bytes(), 0644))
 
 	// Create new bloomfilter with size = number of lines in NSRL database
@@ -130,7 +130,7 @@ func buildFilter() {
 // lookUp queries the NSRL bloomfilter for a hash
 func lookUp(hash string, timeout int) ResultsData {
 
-	var lines int
+	var lines uint64
 	nsrlResults := ResultsData{}
 
 	// read line count from file LINECOUNT
