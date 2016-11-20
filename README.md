@@ -58,7 +58,9 @@ Sample Output
 
 ```json
 {
-  "nsrl": {}
+  "nsrl": {
+    "found": true
+  }
 }
 ```
 
@@ -66,7 +68,8 @@ Sample Output
 
 ---
 
-#### nsrl
+#### NSRL Database
+ - Found
 
 ---
 

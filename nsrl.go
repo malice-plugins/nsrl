@@ -53,7 +53,7 @@ type ResultsData struct {
 }
 
 func printMarkDownTable(nsrl Nsrl) {
-	fmt.Println("#### NSRL")
+	fmt.Println("#### NSRL Database")
 	if nsrl.Results.Found {
 		fmt.Println(" - Found")
 	} else {
