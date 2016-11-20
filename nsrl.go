@@ -30,6 +30,16 @@ var (
 
 	// ErrorRate stores the bloomfilter desired error-rate
 	ErrorRate string
+
+	// NSRL fields
+	sha1         = 0
+	md5          = 1
+	crc32        = 2
+	fileName     = 3
+	fileSize     = 4
+	productCode  = 5
+	opSystemCode = 6
+	specialCode  = 7
 )
 
 const (
@@ -105,6 +115,8 @@ func buildFilter() {
 	defer nsrlDB.Close()
 
 	reader := csv.NewReader(nsrlDB)
+	// strip off csv header
+	_, _ = reader.Read()
 	for {
 		record, err := reader.Read()
 
@@ -115,9 +127,9 @@ func buildFilter() {
 			return
 		}
 
-		// Add SHA256
+		// Add MD5
 		log.Debug(record)
-		filter.Add([]byte(record[4]))
+		filter.Add([]byte(record[md5]))
 	}
 
 	bloomFile, err := os.Create("/nsrl.bloom")
@@ -225,7 +237,7 @@ func main() {
 			Name:      "lookup",
 			Aliases:   []string{"l"},
 			Usage:     "Query NSRL for hash",
-			ArgsUsage: "HASH to query NSRL with",
+			ArgsUsage: "MD5 to query NSRL with",
 			Action: func(c *cli.Context) error {
 				if c.Args().Present() {
 					hash := c.Args().First()
@@ -265,7 +277,7 @@ func main() {
 						fmt.Println(string(nsrlJSON))
 					}
 				} else {
-					log.Fatal(fmt.Errorf("Please supply a MD5/SHA1/SHA256 hash to query NSRL with."))
+					log.Fatal(fmt.Errorf("Please supply a MD5 hash to query NSRL with."))
 				}
 				return nil
 			},
