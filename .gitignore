@@ -33,3 +33,6 @@ _testmain.go
 *.zip
 *.bloom
 *.pyc
+
+LINECOUNT
+nsrl

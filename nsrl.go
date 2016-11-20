@@ -71,14 +71,14 @@ func printMarkDownTable(nsrl Nsrl) {
 	}
 }
 
-func lineCounter(r io.Reader) (int, error) {
+func lineCounter(r io.Reader) (uint64, error) {
 	buf := make([]byte, 32*1024)
-	count := 0
+	var count uint64
 	lineSep := []byte{'\n'}
 
 	for {
 		c, err := r.Read(buf)
-		count += bytes.Count(buf[:c], lineSep)
+		count += uint64(bytes.Count(buf[:c], lineSep))
 
 		switch {
 		case err == io.EOF:
@@ -102,11 +102,13 @@ func buildFilter() {
 	log.Debugf("Number of lines in NSRLFile.txt: %d\n", lines)
 	// write line count to file LINECOUNT
 	buf := new(bytes.Buffer)
-	utils.Assert(binary.Write(buf, binary.LittleEndian, uint64(lines)))
+	utils.Assert(binary.Write(buf, binary.LittleEndian, lines))
 	utils.Assert(ioutil.WriteFile("/nsrl/LINECOUNT", buf.Bytes(), 0644))
 
 	// Create new bloomfilter with size = number of lines in NSRL database
 	erate, err := strconv.ParseFloat(ErrorRate, 64)
+	utils.Assert(err)
+
 	filter := bloom.NewWithEstimates(uint(lines), erate)
 
 	// jump back to the begining of the file
