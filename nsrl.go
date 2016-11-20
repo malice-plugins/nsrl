@@ -65,9 +65,9 @@ type ResultsData struct {
 func printMarkDownTable(nsrl Nsrl) {
 	fmt.Println("#### NSRL Database")
 	if nsrl.Results.Found {
-		fmt.Println(" - Found")
+		fmt.Println(" - Found :white_check_mark:")
 	} else {
-		fmt.Println(" - Not Found")
+		fmt.Println(" - Not Found :grey_question:")
 	}
 }
 
