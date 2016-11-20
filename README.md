@@ -99,7 +99,7 @@ $ docker run --rm --link elastic malice/nsrl HASH
 ```bash
 $ docker run malice/nsrl web
 
-INFO[0000] web service listening on port: 3993
+INFO[0000] web service listening on port :3993
 ```
 
 Now you can perform looks like so
