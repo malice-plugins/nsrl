@@ -33,9 +33,9 @@ RUN apk-install -t .build-deps \
   && rm -rf /go /usr/local/go /usr/lib/go /tmp/* \
   && apk del --purge .build-deps
 
-VOLUME ["/malware"]
+VOLUME ["/nsrl"]
 
-WORKDIR /malware
+WORKDIR /nsrl
 
 ENTRYPOINT ["gosu","malice","/sbin/tini","--","nsrl"]
 

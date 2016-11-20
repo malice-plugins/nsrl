@@ -94,16 +94,16 @@ func lineCounter(r io.Reader) (uint64, error) {
 func buildFilter() {
 
 	// open NSRL database
-	nsrlDB, err := os.Open("/nsrl/NSRLFile.txt")
+	nsrlDB, err := os.Open("NSRLFile.txt")
 	utils.Assert(err)
 	defer nsrlDB.Close()
 	// count lines in NSRL database
 	lines, err := lineCounter(nsrlDB)
-	log.Debugf("Number of lines in NSRLFile.txt: %d\n", lines)
+	log.Debugf("Number of lines in NSRLFile.txt: %d", lines)
 	// write line count to file LINECOUNT
 	buf := new(bytes.Buffer)
 	utils.Assert(binary.Write(buf, binary.LittleEndian, lines))
-	utils.Assert(ioutil.WriteFile("/nsrl/LINECOUNT", buf.Bytes(), 0644))
+	utils.Assert(ioutil.WriteFile("LINECOUNT", buf.Bytes(), 0644))
 
 	// Create new bloomfilter with size = number of lines in NSRL database
 	erate, err := strconv.ParseFloat(ErrorRate, 64)
@@ -115,6 +115,7 @@ func buildFilter() {
 	_, err = nsrlDB.Seek(0, io.SeekStart)
 	utils.Assert(err)
 
+	log.Debug("Loading NSRL database into bloomfilter")
 	reader := csv.NewReader(nsrlDB)
 	// strip off csv header
 	_, _ = reader.Read()
@@ -123,21 +124,21 @@ func buildFilter() {
 
 		if err == io.EOF {
 			break
-		} else if err != nil {
-			fmt.Println("Error:", err)
-			return
 		}
+		utils.Assert(err)
 
-		// Add MD5
-		// log.Debug(record)
+		// Add md5
 		filter.Add([]byte(record[md5]))
+		// log.Debug(record)
 	}
 
-	bloomFile, err := os.Create("/nsrl/nsrl.bloom")
+	bloomFile, err := os.Create("nsrl.bloom")
 	utils.Assert(err)
 	defer bloomFile.Close()
 
-	filter.WriteTo(bloomFile)
+	log.Debug("Writing bloomfilter to disk")
+	_, err = filter.WriteTo(bloomFile)
+	utils.Assert(err)
 }
 
 // lookUp queries the NSRL bloomfilter for a hash
@@ -147,18 +148,18 @@ func lookUp(hash string, timeout int) ResultsData {
 	nsrlResults := ResultsData{}
 
 	// read line count from file LINECOUNT
-	lineCount, err := ioutil.ReadFile("/nsrl/LINECOUNT")
+	lineCount, err := ioutil.ReadFile("LINECOUNT")
 	utils.Assert(err)
 	buf := bytes.NewReader(lineCount)
 	utils.Assert(binary.Read(buf, binary.LittleEndian, &lines))
-	log.Debugf("Number of lines in NSRLFile.txt: %d\n", lines)
+	log.Debugf("Number of lines in NSRLFile.txt: %d", lines)
 
 	// Create new bloomfilter with size = number of lines in NSRL database
 	erate, err := strconv.ParseFloat(ErrorRate, 64)
 	filter := bloom.NewWithEstimates(uint(lines), erate)
 
 	// load NSRL bloomfilter from file
-	f, err := os.Open("/nsrl/nsrl.bloom")
+	f, err := os.Open("nsrl.bloom")
 	utils.Assert(err)
 	_, err = filter.ReadFrom(f)
 	utils.Assert(err)
