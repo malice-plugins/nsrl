@@ -128,7 +128,7 @@ func buildFilter() {
 		}
 
 		// Add MD5
-		log.Debug(record)
+		// log.Debug(record)
 		filter.Add([]byte(record[md5]))
 	}
 
