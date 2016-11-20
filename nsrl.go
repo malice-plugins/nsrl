@@ -106,15 +106,15 @@ func buildFilter() {
 
 	reader := csv.NewReader(nsrlDB)
 	for {
-		// read just one record, but we could ReadAll() as well
 		record, err := reader.Read()
-		// end-of-file is fitted into err
+
 		if err == io.EOF {
 			break
 		} else if err != nil {
 			fmt.Println("Error:", err)
 			return
 		}
+
 		// Add SHA256
 		log.Debug(record)
 		filter.Add([]byte(record[4]))
