@@ -84,6 +84,14 @@ $ docker run -d --name elastic \
 $ docker run --rm --link elastic malice/nsrl HASH
 ```
 
+### POST results to a webhook
+
+```bash
+$ docker run -v `pwd`:/malware:ro \
+             -e MALICE_ENDPOINT="https://malice.io:31337/scan/file" \
+             malice/nsrl HASH
+```   
+
 ### Issues
 
 Find a bug? Want more features? Find something missing in the documentation? Let me know! Please don't hesitate to [file an issue](https://github.com/maliceio/malice-nsrl/issues/new)

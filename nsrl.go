@@ -1,9 +1,15 @@
 package main
 
 import (
+	"bytes"
+	"encoding/binary"
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"os"
+	"strconv"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -12,13 +18,19 @@ import (
 	"github.com/maliceio/go-plugin-utils/utils"
 	"github.com/parnurzeal/gorequest"
 	"github.com/urfave/cli"
+	"github.com/willf/bloom"
 )
 
-// Version stores the plugin's version
-var Version string
+var (
+	// Version stores the plugin's version
+	Version string
 
-// BuildTime stores the plugin's build time
-var BuildTime string
+	// BuildTime stores the plugin's build time
+	BuildTime string
+
+	// ErrorRate stores the bloomfilter desired error-rate
+	ErrorRate string
+)
 
 const (
 	name     = "nsrl"
@@ -40,7 +52,6 @@ type ResultsData struct {
 	Found bool `json:"found"`
 }
 
-// TODO: handle more than just the first Offset, handle multiple MatchStrings
 func printMarkDownTable(nsrl Nsrl) {
 	fmt.Println("#### NSRL")
 	if nsrl.Results.Found {
@@ -50,10 +61,96 @@ func printMarkDownTable(nsrl Nsrl) {
 	}
 }
 
+func lineCounter(r io.Reader) (int, error) {
+	buf := make([]byte, 32*1024)
+	count := 0
+	lineSep := []byte{'\n'}
+
+	for {
+		c, err := r.Read(buf)
+		count += bytes.Count(buf[:c], lineSep)
+
+		switch {
+		case err == io.EOF:
+			return count, nil
+
+		case err != nil:
+			return count, err
+		}
+	}
+}
+
+func buildFilter() {
+
+	// open NSRL database
+	nsrlDB, err := os.Open("/nsrl/NSRLFile.txt")
+	utils.Assert(err)
+	// count lines in NSRL database
+	lines, err := lineCounter(nsrlDB)
+	log.Debugf("Number of lines in NSRLFile.txt: %s\n", lines)
+	nsrlDB.Close()
+	// write line count to file LINECOUNT
+	buf := new(bytes.Buffer)
+	utils.Assert(binary.Write(buf, binary.LittleEndian, lines))
+	utils.Assert(ioutil.WriteFile("/nsrl/LINECOUNT", buf.Bytes(), 0644))
+
+	// Create new bloomfilter with size = number of lines in NSRL database
+	erate, err := strconv.ParseFloat(ErrorRate, 64)
+	filter := bloom.NewWithEstimates(uint(lines), erate)
+
+	// open NSRL database
+	nsrlDB, err = os.Open("/nsrl/NSRLFile.txt")
+	utils.Assert(err)
+	defer nsrlDB.Close()
+
+	reader := csv.NewReader(nsrlDB)
+	for {
+		// read just one record, but we could ReadAll() as well
+		record, err := reader.Read()
+		// end-of-file is fitted into err
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		// Add SHA256
+		log.Debug(record)
+		filter.Add([]byte(record[4]))
+	}
+
+	bloomFile, err := os.Create("/nsrl.bloom")
+	utils.Assert(err)
+	defer bloomFile.Close()
+
+	filter.WriteTo(bloomFile)
+}
+
 // lookUp queries the NSRL bloomfilter for a hash
 func lookUp(hash string, timeout int) ResultsData {
 
+	var lines int
 	nsrlResults := ResultsData{}
+
+	// read line count from file LINECOUNT
+	lineCount, err := ioutil.ReadFile("/nsrl/LINECOUNT")
+	utils.Assert(err)
+	buf := bytes.NewReader(lineCount)
+	utils.Assert(binary.Read(buf, binary.LittleEndian, &lines))
+	log.Debugf("Number of lines in NSRLFile.txt: %s\n", lines)
+
+	// Create new bloomfilter with size = number of lines in NSRL database
+	erate, err := strconv.ParseFloat(ErrorRate, 64)
+	filter := bloom.NewWithEstimates(uint(lines), erate)
+
+	// load NSRL bloomfilter from file
+	f, err := os.Open("/nsrl.bloom")
+	utils.Assert(err)
+	_, err = filter.ReadFrom(f)
+	utils.Assert(err)
+
+	// test of existance of hash in bloomfilter
+	nsrlResults.Found = filter.TestString(hash)
 
 	return nsrlResults
 }

@@ -23,10 +23,11 @@ echo "[INFO] Unzip NSRL Database zip to /nsrl/ ..."
 7za x -o/nsrl/ /nsrl/*.zip
 
 echo "[INFO] Build bloomfilter from NSRL Database ..."
-cd /nsrl && python /nsrl/build.py $ERROR_RATE
+cd /nsrl && /bin/nsrl
+
 echo "[INFO] Listing created files ..."
 ls -lah /nsrl
 
 echo "[INFO] Deleting all unused files ..."
-rm -f /nsrl/*.zip /nsrl/*.txt /nsrl/build.py
+rm -f /nsrl/*.zip /nsrl/*.txt /nsrl/*.py
 ls -lah /nsrl

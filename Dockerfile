@@ -9,6 +9,7 @@ RUN apk-install -t .build-deps \
                     mercurial \
                     musl-dev \
                     openssl \
+                    p7zip \
                     bash \
                     wget \
                     git \
@@ -26,18 +27,11 @@ RUN apk-install -t .build-deps \
   && export CGO_LDFLAGS="-L/usr/local/lib" \
   && go version \
   && go get \
-  && go build -ldflags "-X main.Version=$(cat VERSION) -X main.BuildTime=$(date -u +%Y%m%d)" -o /bin/nsrl \
+  && go build -ldflags "-X main.Version=$(cat VERSION) -X main.ErrorRate=$(cat ERROR) -X main.BuildTime=$(date -u +%Y%m%d)" -o /bin/nsrl \
+  && echo "[INFO] Creating bloomfilter from NSRL database..." \ 
+  && /nsrl/shrink_nsrl.sh \
   && rm -rf /go /usr/local/go /usr/lib/go /tmp/* \
   && apk del --purge .build-deps
-
-RUN buildDeps='gcc libc-dev python-dev py-pip p7zip' \
-  && set -x \
-  && apk --update add python $buildDeps \
-  && rm -f /var/cache/apk/* \
-  && pip install pybloom \
-  && /nsrl/shrink_nsrl.sh \
-  && apk del --purge $buildDeps \
-  && rm -rf /tmp/* /root/.cache /var/cache/apk/* /nsrl/shrink_nsrl.sh
 
 VOLUME ["/malware"]
 
@@ -46,7 +40,3 @@ WORKDIR /malware
 ENTRYPOINT ["gosu","malice","/sbin/tini","--","nsrl"]
 
 CMD ["--help"]
-
-# ENTRYPOINT ["/nsrl/search.py"]
-
-# CMD ["-h"]
