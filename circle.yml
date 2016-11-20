@@ -9,7 +9,7 @@ dependencies:
     - docker info
     - if [[ -e ~/docker/image.tar ]]; then docker load --input ~/docker/image.tar; fi
     - docker build -t malice_nsrl .
-      timeout: 1200
+      timeout: 1200 # 20 mins
     - mkdir -p ~/docker; docker save malice_nsrl > ~/docker/image.tar
 
 test:
