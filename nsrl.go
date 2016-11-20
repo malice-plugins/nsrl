@@ -81,7 +81,6 @@ func lineCounter(r io.Reader) (int, error) {
 }
 
 func buildFilter() {
-
 	// open NSRL database
 	nsrlDB, err := os.Open("/nsrl/NSRLFile.txt")
 	utils.Assert(err)
@@ -205,50 +204,69 @@ func main() {
 			EnvVar: "MALICE_TIMEOUT",
 		},
 	}
-	app.ArgsUsage = "FILE to scan with NSRL"
-	app.Action = func(c *cli.Context) error {
-
-		if c.Args().Present() {
-			hash := c.Args().First()
-
-			if c.Bool("verbose") {
-				log.SetLevel(log.DebugLevel)
-			}
-
-			nsrl := Nsrl{Results: lookUp(hash, c.Int("timeout"))}
-
-			// upsert into Database
-			elasticsearch.InitElasticSearch(elastic)
-			elasticsearch.WritePluginResultsToDatabase(elasticsearch.PluginResults{
-				ID:       utils.Getopt("MALICE_SCANID", hash),
-				Name:     name,
-				Category: category,
-				Data:     structs.Map(nsrl.Results),
-			})
-
-			if c.Bool("table") {
-				printMarkDownTable(nsrl)
-			} else {
-				nsrlJSON, err := json.Marshal(nsrl)
-				utils.Assert(err)
-				if c.Bool("post") {
-					request := gorequest.New()
-					if c.Bool("proxy") {
-						request = gorequest.New().Proxy(os.Getenv("MALICE_PROXY"))
-					}
-					request.Post(os.Getenv("MALICE_ENDPOINT")).
-						Set("X-Malice-ID", utils.Getopt("MALICE_SCANID", hash)).
-						Send(string(nsrlJSON)).
-						End(printStatus)
-
-					return nil
+	app.Commands = []cli.Command{
+		{
+			Name:    "build",
+			Aliases: []string{"b"},
+			Usage:   "Build bloomfilter from NSRL database",
+			Action: func(c *cli.Context) error {
+				if c.GlobalBool("verbose") {
+					log.SetLevel(log.DebugLevel)
 				}
-				fmt.Println(string(nsrlJSON))
-			}
-		} else {
-			log.Fatal(fmt.Errorf("Please supply a MD5/SHA1/SHA256 hash to query NSRL with."))
-		}
-		return nil
+				// build bloomfilter
+				buildFilter()
+				return nil
+			},
+		},
+		{
+			Name:      "lookup",
+			Aliases:   []string{"l"},
+			Usage:     "Query NSRL for hash",
+			ArgsUsage: "HASH to query NSRL with",
+			Action: func(c *cli.Context) error {
+				if c.Args().Present() {
+					hash := c.Args().First()
+
+					if c.GlobalBool("verbose") {
+						log.SetLevel(log.DebugLevel)
+					}
+
+					nsrl := Nsrl{Results: lookUp(hash, c.Int("timeout"))}
+
+					// upsert into Database
+					elasticsearch.InitElasticSearch(elastic)
+					elasticsearch.WritePluginResultsToDatabase(elasticsearch.PluginResults{
+						ID:       utils.Getopt("MALICE_SCANID", hash),
+						Name:     name,
+						Category: category,
+						Data:     structs.Map(nsrl.Results),
+					})
+
+					if c.GlobalBool("table") {
+						printMarkDownTable(nsrl)
+					} else {
+						nsrlJSON, err := json.Marshal(nsrl)
+						utils.Assert(err)
+						if c.GlobalBool("post") {
+							request := gorequest.New()
+							if c.GlobalBool("proxy") {
+								request = gorequest.New().Proxy(os.Getenv("MALICE_PROXY"))
+							}
+							request.Post(os.Getenv("MALICE_ENDPOINT")).
+								Set("X-Malice-ID", utils.Getopt("MALICE_SCANID", hash)).
+								Send(string(nsrlJSON)).
+								End(printStatus)
+
+							return nil
+						}
+						fmt.Println(string(nsrlJSON))
+					}
+				} else {
+					log.Fatal(fmt.Errorf("Please supply a MD5/SHA1/SHA256 hash to query NSRL with."))
+				}
+				return nil
+			},
+		},
 	}
 
 	err := app.Run(os.Args)

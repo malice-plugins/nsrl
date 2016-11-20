@@ -5,7 +5,7 @@ malice-nsrl
 
 [![Circle CI](https://circleci.com/gh/maliceio/malice-nsrl.png?style=shield)](https://circleci.com/gh/maliceio/malice-nsrl) [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) [![Docker Stars](https://img.shields.io/docker/stars/malice/nsrl.svg)](https://hub.docker.com/r/malice/nsrl/) [![Docker Pulls](https://img.shields.io/docker/pulls/malice/nsrl.svg)](https://hub.docker.com/r/malice/nsrl/) [![Docker Image](https://img.shields.io/badge/docker image-37.26 MB-blue.svg)](https://hub.docker.com/r/malice/nsrl/)
 
-Malice NSRL Plugin - This takes the **5.43GB** [NSRL](http://www.nsrl.nist.gov/Downloads.htm) minimal set and converts it into a **96M** [bloom filter](https://en.wikipedia.org/wiki/Bloom_filter).
+Malice NSRL Plugin - This takes the **6.49GB** [NSRL](http://www.nsrl.nist.gov/Downloads.htm) minimal set and converts it into a **96M** [bloom filter](https://en.wikipedia.org/wiki/Bloom_filter).
 
 This repository contains a **Dockerfile** of the [NSRL](http://www.nsrl.nist.gov) lookup malice plugin **malice/nsrl**.
 

@@ -3,10 +3,6 @@
 # copyright: (c) 2014 by Josh "blacktop" Maine.
 # license: MIT
 
-set -x
-
-ERROR_RATE=0.01
-
 if [ -f /nsrl/*.zip ]; then
    echo "File '.zip' Exists."
 else
@@ -23,11 +19,11 @@ echo "[INFO] Unzip NSRL Database zip to /nsrl/ ..."
 7za x -o/nsrl/ /nsrl/*.zip
 
 echo "[INFO] Build bloomfilter from NSRL Database ..."
-cd /nsrl && /bin/nsrl
+cd /nsrl && /bin/nsrl --verbose build
 
 echo "[INFO] Listing created files ..."
 ls -lah /nsrl
 
 echo "[INFO] Deleting all unused files ..."
-rm -f /nsrl/*.zip /nsrl/*.txt /nsrl/*.py
+rm -f *.zip *.txt *.py *.sh
 ls -lah /nsrl
