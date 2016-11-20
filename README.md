@@ -21,7 +21,7 @@ This repository contains a **Dockerfile** of the [NSRL](http://www.nsrl.nist.gov
 ### Usage
 
 ```
-docker run --rm malice/nsrl HASH
+docker run --rm malice/nsrl lookup MD5
 ```
 
 ```bash
