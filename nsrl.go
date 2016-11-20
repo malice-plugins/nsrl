@@ -129,9 +129,8 @@ func buildFilter() {
 		}
 		utils.Assert(err)
 
-		// Add md5
-		filter.Add([]byte(record[md5]))
 		// log.Debug(record)
+		filter.Add([]byte(record[md5]))
 	}
 
 	bloomFile, err := os.Create("nsrl.bloom")
@@ -232,7 +231,6 @@ func main() {
 					log.SetLevel(log.DebugLevel)
 				}
 
-				// build bloomfilter
 				buildFilter()
 				return nil
 			},
