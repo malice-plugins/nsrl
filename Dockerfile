@@ -2,7 +2,7 @@ FROM malice/alpine:tini
 
 MAINTAINER blacktop, https://github.com/blacktop
 
-COPY nsrl /nsrl
+COPY shrink_nsrl.sh /nsrl/shrink_nsrl.sh
 COPY . /go/src/github.com/maliceio/malice-nsrl
 RUN apk-install -t .build-deps \
                     build-base \

@@ -25,5 +25,5 @@ echo "[INFO] Listing created files ..."
 ls -lah /nsrl
 
 echo "[INFO] Deleting all unused files ..."
-rm -f *.zip *.txt *.py *.sh
+rm -f *.zip *.txt *.sh
 ls -lah /nsrl
