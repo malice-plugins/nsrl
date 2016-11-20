@@ -94,7 +94,7 @@ $ docker run -d --name elastic \
 $ docker run --rm --link elastic malice/nsrl HASH
 ```
 
-### Create a NSRL lookup micro-service
+### Create a NSRL lookup micro-service :new:
 
 ```bash
 $ docker run malice/nsrl web
