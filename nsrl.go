@@ -30,7 +30,9 @@ var (
 
 	// ErrorRate stores the bloomfilter desired error-rate
 	ErrorRate string
+)
 
+const (
 	// NSRL fields
 	sha1         = 0
 	md5          = 1
