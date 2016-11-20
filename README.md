@@ -69,7 +69,7 @@ Sample Output
 ---
 
 #### NSRL Database
- - Found
+ - Found :white_check_mark:
 
 ---
 
