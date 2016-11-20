@@ -15,7 +15,7 @@ dependencies:
 test:
   override:
     - docker images malice_nsrl
-    - docker run malice_nsrl -t 60B7C0FEAD45F2066E5B805A91F4F0FC
+    - docker run malice_nsrl -t lookup 60B7C0FEAD45F2066E5B805A91F4F0FC
 
 deployment:
   # master:

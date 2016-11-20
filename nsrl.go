@@ -96,10 +96,10 @@ func buildFilter() {
 	// open NSRL database
 	nsrlDB, err := os.Open("/nsrl/NSRLFile.txt")
 	utils.Assert(err)
+	defer nsrlDB.Close()
 	// count lines in NSRL database
 	lines, err := lineCounter(nsrlDB)
 	log.Debugf("Number of lines in NSRLFile.txt: %d\n", lines)
-	nsrlDB.Close()
 	// write line count to file LINECOUNT
 	buf := new(bytes.Buffer)
 	utils.Assert(binary.Write(buf, binary.LittleEndian, uint64(lines)))
@@ -109,10 +109,9 @@ func buildFilter() {
 	erate, err := strconv.ParseFloat(ErrorRate, 64)
 	filter := bloom.NewWithEstimates(uint(lines), erate)
 
-	// open NSRL database
-	nsrlDB, err = os.Open("/nsrl/NSRLFile.txt")
+	// jump back to the begining of the file
+	_, err = nsrlDB.Seek(0, io.SeekStart)
 	utils.Assert(err)
-	defer nsrlDB.Close()
 
 	reader := csv.NewReader(nsrlDB)
 	// strip off csv header
@@ -132,7 +131,7 @@ func buildFilter() {
 		filter.Add([]byte(record[md5]))
 	}
 
-	bloomFile, err := os.Create("/nsrl.bloom")
+	bloomFile, err := os.Create("/nsrl/nsrl.bloom")
 	utils.Assert(err)
 	defer bloomFile.Close()
 
@@ -157,7 +156,7 @@ func lookUp(hash string, timeout int) ResultsData {
 	filter := bloom.NewWithEstimates(uint(lines), erate)
 
 	// load NSRL bloomfilter from file
-	f, err := os.Open("/nsrl.bloom")
+	f, err := os.Open("/nsrl/nsrl.bloom")
 	utils.Assert(err)
 	_, err = filter.ReadFrom(f)
 	utils.Assert(err)
