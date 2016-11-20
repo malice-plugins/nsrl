@@ -102,7 +102,7 @@ $ docker run malice/nsrl web
 INFO[0000] web service listening on port :3993
 ```
 
-Now you can perform looks like so
+Now you can perform queries like so
 
 ```bash
 $ http localhost:3993/lookup/60B7C0FEAD45F2066E5B805A91F4F0FC
