@@ -8,12 +8,15 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/fatih/structs"
+	"github.com/gorilla/mux"
 	"github.com/maliceio/go-plugin-utils/database/elasticsearch"
 	"github.com/maliceio/go-plugin-utils/utils"
 	"github.com/parnurzeal/gorequest"
@@ -171,6 +174,38 @@ func lookUp(hash string, timeout int) ResultsData {
 	return nsrlResults
 }
 
+func webService() {
+	router := mux.NewRouter().StrictSlash(true)
+	router.HandleFunc("/lookup/{md5}", webLookUp)
+	log.Info("web service listening on port :3993")
+	log.Fatal(http.ListenAndServe(":3993", router))
+}
+
+func webLookUp(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	hash := vars["md5"]
+
+	hashType, _ := utils.GetHashType(hash)
+
+	if strings.EqualFold(hashType, "md5") {
+		nsrl := Nsrl{Results: lookUp(strings.ToUpper(hash), 10)}
+
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		if nsrl.Results.Found {
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+		}
+
+		if err := json.NewEncoder(w).Encode(nsrl); err != nil {
+			panic(err)
+		}
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Please supply a proper MD5 hash to query")
+	}
+}
+
 func printStatus(resp gorequest.Response, body string, errs []error) {
 	fmt.Println(body)
 }
@@ -216,12 +251,21 @@ func main() {
 		},
 		cli.IntFlag{
 			Name:   "timeout",
-			Value:  60,
+			Value:  10,
 			Usage:  "malice plugin timeout (in seconds)",
 			EnvVar: "MALICE_TIMEOUT",
 		},
 	}
 	app.Commands = []cli.Command{
+		{
+			Name:    "web",
+			Aliases: []string{"w"},
+			Usage:   "Create a NSRL lookup web service",
+			Action: func(c *cli.Context) error {
+				webService()
+				return nil
+			},
+		},
 		{
 			Name:    "build",
 			Aliases: []string{"b"},
@@ -242,13 +286,18 @@ func main() {
 			ArgsUsage: "MD5 to query NSRL with",
 			Action: func(c *cli.Context) error {
 				if c.Args().Present() {
-					hash := c.Args().First()
+					hash := strings.ToUpper(c.Args().First())
+					hashType, _ := utils.GetHashType(hash)
+
+					if !strings.EqualFold(hashType, "md5") {
+						log.Fatal(fmt.Errorf("Please supply a valid MD5 hash to query NSRL with."))
+					}
 
 					if c.GlobalBool("verbose") {
 						log.SetLevel(log.DebugLevel)
 					}
 
-					nsrl := Nsrl{Results: lookUp(hash, c.Int("timeout"))}
+					nsrl := Nsrl{Results: lookUp(hash, c.GlobalInt("timeout"))}
 
 					// upsert into Database
 					elasticsearch.InitElasticSearch(elastic)

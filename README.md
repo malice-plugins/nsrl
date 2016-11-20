@@ -45,6 +45,8 @@ Options:
   --version, -v		print the version
 
 Commands:
+  web		Create a NSRL lookup web service
+  build		Build bloomfilter from NSRL database
   lookup	Query NSRL for hash
   help		Shows a list of commands or help for one command
 
@@ -56,6 +58,8 @@ Sample Output
 
 ### JSON:
 
+---
+
 ```json
 {
   "nsrl": {
@@ -64,12 +68,15 @@ Sample Output
 }
 ```
 
-### STDOUT (Markdown Table):
+---
+
+### Markdown Table:
 
 ---
 
 #### NSRL Database
- - Found :white_check_mark:
+
+-	Found :white_check_mark:
 
 ---
 
@@ -87,13 +94,40 @@ $ docker run -d --name elastic \
 $ docker run --rm --link elastic malice/nsrl HASH
 ```
 
+### Create a NSRL lookup micro-service
+
+```bash
+$ docker run malice/nsrl web
+
+INFO[0000] web service listening on port: 3993
+```
+
+Now you can perform looks like so
+
+```bash
+$ http localhost:3993/lookup/60B7C0FEAD45F2066E5B805A91F4F0FC
+```
+
+```bash
+HTTP/1.1 200 OK
+Content-Length: 24
+Content-Type: application/json; charset=UTF-8
+Date: Sun, 20 Nov 2016 21:43:30 GMT
+
+{
+    "nsrl": {
+        "found": true
+    }
+}
+```
+
 ### POST results to a webhook
 
 ```bash
 $ docker run -v `pwd`:/malware:ro \
              -e MALICE_ENDPOINT="https://malice.io:31337/scan/file" \
              malice/nsrl HASH
-```   
+```
 
 ### Issues
 

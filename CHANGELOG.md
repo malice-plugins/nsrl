@@ -21,7 +21,9 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
--	Timeout to protect against bad files 
+-	web service
+-	hash type checking
+-	input string normalization
 
 ### Removed
 
