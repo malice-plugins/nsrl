@@ -82,6 +82,7 @@ func lineCounter(r io.Reader) (int, error) {
 
 // build bloomfilter from NSRL database
 func buildFilter() {
+
 	// open NSRL database
 	nsrlDB, err := os.Open("/nsrl/NSRLFile.txt")
 	utils.Assert(err)
@@ -217,7 +218,6 @@ func main() {
 
 				// build bloomfilter
 				buildFilter()
-
 				return nil
 			},
 		},
