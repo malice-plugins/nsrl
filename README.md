@@ -124,9 +124,7 @@ Date: Sun, 20 Nov 2016 21:43:30 GMT
 ### POST results to a webhook
 
 ```bash
-$ docker run -v `pwd`:/malware:ro \
-             -e MALICE_ENDPOINT="https://malice.io:31337/scan/file" \
-             malice/nsrl HASH
+$ docker run -e MALICE_ENDPOINT="https://malice.io:31337/scan/file" malice/nsrl HASH
 ```
 
 ### Issues
