@@ -1,4 +1,4 @@
-FROM malice/alpine:tini
+FROM malice/alpine
 
 MAINTAINER blacktop, https://github.com/blacktop
 
@@ -14,7 +14,7 @@ RUN apk-install -t .build-deps \
                     wget \
                     git \
                     gcc \
-                    go \                    
+                    go \
   && cd /tmp \
   && wget https://raw.githubusercontent.com/maliceio/go-plugin-utils/master/scripts/upgrade-alpine-go.sh \
   && chmod +x upgrade-alpine-go.sh \
@@ -28,7 +28,7 @@ RUN apk-install -t .build-deps \
   && go version \
   && go get \
   && go build -ldflags "-s -w -X main.Version=$(cat VERSION) -X main.ErrorRate=$(cat ERROR) -X main.BuildTime=$(date -u +%Y%m%d)" -o /bin/nsrl \
-  && echo "[INFO] Creating bloomfilter from NSRL database..." \ 
+  && echo "[INFO] Creating bloomfilter from NSRL database..." \
   && /nsrl/shrink_nsrl.sh \
   && rm -rf /go /usr/local/go /usr/lib/go /tmp/* \
   && apk del --purge .build-deps
@@ -37,6 +37,6 @@ VOLUME ["/nsrl"]
 
 WORKDIR /nsrl
 
-ENTRYPOINT ["gosu","malice","/sbin/tini","--","nsrl"]
+ENTRYPOINT ["su-exec","malice","/sbin/tini","--","nsrl"]
 
 CMD ["--help"]
