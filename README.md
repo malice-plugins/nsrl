@@ -3,7 +3,7 @@
 malice-nsrl
 ===========
 
-[![Circle CI](https://circleci.com/gh/maliceio/malice-nsrl.png?style=shield)](https://circleci.com/gh/maliceio/malice-nsrl) [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) [![Docker Stars](https://img.shields.io/docker/stars/malice/nsrl.svg)](https://hub.docker.com/r/malice/nsrl/) [![Docker Pulls](https://img.shields.io/docker/pulls/malice/nsrl.svg)](https://hub.docker.com/r/malice/nsrl/) [![Docker Image](https://img.shields.io/badge/docker image-104 MB-blue.svg)](https://hub.docker.com/r/malice/nsrl/)
+[![Circle CI](https://circleci.com/gh/maliceio/malice-nsrl.png?style=shield)](https://circleci.com/gh/maliceio/malice-nsrl) [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) [![Docker Stars](https://img.shields.io/docker/stars/malice/nsrl.svg)](https://hub.docker.com/r/malice/nsrl/) [![Docker Pulls](https://img.shields.io/docker/pulls/malice/nsrl.svg)](https://hub.docker.com/r/malice/nsrl/) [![Docker Image](https://img.shields.io/badge/docker image-77.9 MB-blue.svg)](https://hub.docker.com/r/malice/nsrl/)
 
 Malice NSRL Plugin - This takes the **6.49GB** [NSRL](http://www.nsrl.nist.gov/Downloads.htm) minimal set and converts it into a **86M** [bloom filter](https://en.wikipedia.org/wiki/Bloom_filter) with an Estimate False Positive Rate of `0.001`
 
@@ -104,4 +104,4 @@ Please update the [CHANGELOG.md](https://github.com/maliceio/malice-nsrl/blob/ma
 
 ### License
 
-MIT Copyright (c) 2016 **blacktop**
+MIT Copyright (c) 2016-2017 **blacktop**

@@ -176,18 +176,18 @@ func lookUp(hash string, timeout int) ResultsData {
 
 func webService() {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/lookup/{md5}", webLookUp)
+	router.HandleFunc("/lookup/{sha1}", webLookUp)
 	log.Info("web service listening on port :3993")
 	log.Fatal(http.ListenAndServe(":3993", router))
 }
 
 func webLookUp(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	hash := vars["md5"]
+	hash := vars["sha1"]
 
 	hashType, _ := utils.GetHashType(hash)
 
-	if strings.EqualFold(hashType, "md5") {
+	if strings.EqualFold(hashType, "sha1") {
 		nsrl := Nsrl{Results: lookUp(strings.ToUpper(hash), 10)}
 
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -202,7 +202,7 @@ func webLookUp(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintln(w, "Please supply a proper MD5 hash to query")
+		fmt.Fprintln(w, "Please supply a proper SHA1 hash to query")
 	}
 }
 
@@ -283,14 +283,14 @@ func main() {
 			Name:      "lookup",
 			Aliases:   []string{"l"},
 			Usage:     "Query NSRL for hash",
-			ArgsUsage: "MD5 to query NSRL with",
+			ArgsUsage: "SHA1 to query NSRL with",
 			Action: func(c *cli.Context) error {
 				if c.Args().Present() {
 					hash := strings.ToUpper(c.Args().First())
 					hashType, _ := utils.GetHashType(hash)
 
-					if !strings.EqualFold(hashType, "md5") {
-						log.Fatal(fmt.Errorf("Please supply a valid MD5 hash to query NSRL with."))
+					if !strings.EqualFold(hashType, "sha1") {
+						log.Fatal(fmt.Errorf("Please supply a valid SHA1 hash to query NSRL with."))
 					}
 
 					if c.GlobalBool("verbose") {
@@ -328,7 +328,7 @@ func main() {
 						fmt.Println(string(nsrlJSON))
 					}
 				} else {
-					log.Fatal(fmt.Errorf("Please supply a MD5 hash to query NSRL with."))
+					log.Fatal(fmt.Errorf("Please supply a SHA1 hash to query NSRL with."))
 				}
 				return nil
 			},
