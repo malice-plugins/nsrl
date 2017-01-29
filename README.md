@@ -21,7 +21,8 @@ This repository contains a **Dockerfile** of the [NSRL](http://www.nsrl.nist.gov
 ### Usage
 
 ```
-docker run --rm malice/nsrl lookup MD5
+docker run --rm malice/nsrl:md5 lookup MD5
+docker run --rm malice/nsrl:sha1 lookup SHA1
 ```
 
 ```bash
@@ -83,49 +84,9 @@ Sample Output
 Documentation
 -------------
 
-### To write results to [ElasticSearch](https://www.elastic.co/products/elasticsearch)
-
-```bash
-$ docker volume create --name malice
-$ docker run -d --name elastic \
-                -p 9200:9200 \
-                -v malice:/usr/share/elasticsearch/data \
-                 blacktop/elasticsearch
-$ docker run --rm --link elastic malice/nsrl HASH
-```
-
-### Create a NSRL lookup micro-service :new:
-
-```bash
-$ docker run malice/nsrl web
-
-INFO[0000] web service listening on port :3993
-```
-
-Now you can perform queries like so
-
-```bash
-$ http localhost:3993/lookup/60B7C0FEAD45F2066E5B805A91F4F0FC
-```
-
-```bash
-HTTP/1.1 200 OK
-Content-Length: 24
-Content-Type: application/json; charset=UTF-8
-Date: Sun, 20 Nov 2016 21:43:30 GMT
-
-{
-    "nsrl": {
-        "found": true
-    }
-}
-```
-
-### POST results to a webhook
-
-```bash
-$ docker run -e MALICE_ENDPOINT="https://malice.io:31337/scan/file" malice/nsrl HASH
-```
+-	[To write results to ElasticSearch](https://github.com/maliceio/malice-nsrl/blob/master/docs/elasticsearch.md)
+-	[To create a nsrl lookup micro-service](https://github.com/maliceio/malice-nsrl/blob/master/docs/web.md)
+-	[To post results to a webhook](https://github.com/maliceio/malice-nsrl/blob/master/docs/callback.md)
 
 ### Issues
 

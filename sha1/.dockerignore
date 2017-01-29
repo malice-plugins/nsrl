@@ -1,0 +1,13 @@
+# Ignore .git folder
+.git*
+.gitignore
+
+.DS_Store
+logo.png
+*.txt
+CHANGELOG.md
+LICENSE
+Makefile
+README.md
+README.md.bu
+circle.yml

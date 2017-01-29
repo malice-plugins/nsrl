@@ -3,18 +3,7 @@ Change Log
 
 All notable changes to this project will be documented in this file.
 
-[Unreleased][unreleased]
-------------------------
-
-### Fixed
-
-### Added
-
-### Removed
-
-### Changed
-
-[v0.1.0] - 2016-07-24
+[v0.1.0] - 2017-01-29
 ---------------------
 
 ### Fixed
@@ -24,9 +13,10 @@ All notable changes to this project will be documented in this file.
 -	web service
 -	hash type checking
 -	input string normalization
+- sha1 + md5 tags
 
 ### Removed
 
 ### Changed
 
--	Upgrade Golang to 1.7.3
+-	Upgrade Golang to 1.7.5
