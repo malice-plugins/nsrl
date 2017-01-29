@@ -11,7 +11,7 @@ This repository contains a **Dockerfile** of the [NSRL](http://www.nsrl.nist.gov
 
 ### Dependencies
 
--	[malice/alpine:tini](https://hub.docker.com/r/malice/alpine/)
+-	[malice/alpine](https://hub.docker.com/r/malice/alpine/)
 
 ### Installation
 
