@@ -15,7 +15,7 @@ tags:
 
 test:
 	docker run --rm $(REPO)/$(NAME):$(BUILD) --help
-	docker run --rm $(REPO)/$(NAME):$(BUILD) -V lookup 60B7C0FEAD45F2066E5B805A91F4F0FC > results.json
+	docker run --rm $(REPO)/$(NAME):$(BUILD) -V lookup 6b82f126555e7644816df5d4e4614677ee0bda5c > results.json
 	cat results.json | jq .
 
 .PHONY: build size tags test
