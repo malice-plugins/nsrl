@@ -4,17 +4,17 @@ LABEL maintainer "https://github.com/blacktop"
 
 COPY shrink_nsrl.sh /nsrl/shrink_nsrl.sh
 COPY . /go/src/github.com/maliceio/malice-nsrl
-RUN apk-install -t .build-deps \
-                    build-base \
-                    mercurial \
-                    musl-dev \
-                    openssl \
-                    p7zip \
-                    bash \
-                    wget \
-                    git \
-                    gcc \
-                    go \
+RUN apk add --no-cache -t .build-deps \
+                          build-base \
+                          mercurial \
+                          musl-dev \
+                          openssl \
+                          p7zip \
+                          bash \
+                          wget \
+                          git \
+                          gcc \
+                          go \
   && cd /tmp \
   && wget https://raw.githubusercontent.com/maliceio/go-plugin-utils/master/scripts/upgrade-alpine-go.sh \
   && chmod +x upgrade-alpine-go.sh \
