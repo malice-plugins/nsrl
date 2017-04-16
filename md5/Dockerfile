@@ -1,6 +1,6 @@
 FROM malice/alpine
 
-MAINTAINER blacktop, https://github.com/blacktop
+LABEL maintainer "https://github.com/blacktop"
 
 COPY shrink_nsrl.sh /nsrl/shrink_nsrl.sh
 COPY . /go/src/github.com/maliceio/malice-nsrl
@@ -19,7 +19,7 @@ RUN apk add --no-cache -t .build-deps \
   && wget https://raw.githubusercontent.com/maliceio/go-plugin-utils/master/scripts/upgrade-alpine-go.sh \
   && chmod +x upgrade-alpine-go.sh \
   && ./upgrade-alpine-go.sh \
-  && echo "Building info Go binary..." \
+  && echo "===> Building info Go binary..." \
   && cd /go/src/github.com/maliceio/malice-nsrl \
   && export GOPATH=/go \
   && export PATH=$GOPATH/bin:/usr/local/go/bin:$PATH \
@@ -28,7 +28,7 @@ RUN apk add --no-cache -t .build-deps \
   && go version \
   && go get \
   && go build -ldflags "-s -w -X main.Version=$(cat VERSION) -X main.ErrorRate=$(cat ERROR) -X main.BuildTime=$(date -u +%Y%m%d)" -o /bin/nsrl \
-  && echo "[INFO] Creating bloomfilter from NSRL database..." \
+  && echo "===> Creating bloomfilter from NSRL database..." \
   && /nsrl/shrink_nsrl.sh \
   && rm -rf /go /usr/local/go /usr/lib/go /tmp/* \
   && apk del --purge .build-deps
@@ -38,5 +38,4 @@ VOLUME ["/nsrl"]
 WORKDIR /nsrl
 
 ENTRYPOINT ["su-exec","malice","/sbin/tini","--","nsrl"]
-
 CMD ["--help"]
