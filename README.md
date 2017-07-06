@@ -1,9 +1,9 @@
-![NSRL logo](https://raw.githubusercontent.com/maliceio/malice-nsrl/master/logo.png)
+![NSRL logo](https://raw.githubusercontent.com/malice-plugins/nsrl/master/docs/logo.png)
 
 malice-nsrl
 ===========
 
-[![Circle CI](https://circleci.com/gh/maliceio/malice-nsrl.png?style=shield)](https://circleci.com/gh/maliceio/malice-nsrl) [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) [![Docker Stars](https://img.shields.io/docker/stars/malice/nsrl.svg)](https://hub.docker.com/r/malice/nsrl/) [![Docker Pulls](https://img.shields.io/docker/pulls/malice/nsrl.svg)](https://hub.docker.com/r/malice/nsrl/) [![Docker Image](https://img.shields.io/badge/docker%20image-77.9%20MB-blue.svg)](https://hub.docker.com/r/malice/nsrl/)
+[![Circle CI](https://circleci.com/gh/malice-plugins/nsrl.png?style=shield)](https://circleci.com/gh/malice-plugins/nsrl) [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) [![Docker Stars](https://img.shields.io/docker/stars/malice/nsrl.svg)](https://hub.docker.com/r/malice/nsrl/) [![Docker Pulls](https://img.shields.io/docker/pulls/malice/nsrl.svg)](https://hub.docker.com/r/malice/nsrl/) [![Docker Image](https://img.shields.io/badge/docker%20image-77.9-blue.svg)](https://hub.docker.com/r/malice/nsrl/)
 
 Malice NSRL Plugin - This takes the **4.4 GB** [NSRL](http://www.nsrl.nist.gov/Downloads.htm) minimal set and converts it into a **61 MB** [bloom filter](https://en.wikipedia.org/wiki/Bloom_filter) with an Estimate False Positive Rate of `0.001`
 
@@ -84,23 +84,23 @@ Sample Output
 Documentation
 -------------
 
--	[To write results to ElasticSearch](https://github.com/maliceio/malice-nsrl/blob/master/docs/elasticsearch.md)
--	[To create a nsrl lookup micro-service](https://github.com/maliceio/malice-nsrl/blob/master/docs/web.md)
--	[To post results to a webhook](https://github.com/maliceio/malice-nsrl/blob/master/docs/callback.md)
+-	[To write results to ElasticSearch](https://github.com/malice-plugins/nsrl/blob/master/docs/elasticsearch.md)
+-	[To create a nsrl lookup micro-service](https://github.com/malice-plugins/nsrl/blob/master/docs/web.md)
+-	[To post results to a webhook](https://github.com/malice-plugins/nsrl/blob/master/docs/callback.md)
 
 ### Issues
 
-Find a bug? Want more features? Find something missing in the documentation? Let me know! Please don't hesitate to [file an issue](https://github.com/maliceio/malice-nsrl/issues/new)
+Find a bug? Want more features? Find something missing in the documentation? Let me know! Please don't hesitate to [file an issue](https://github.com/malice-plugins/nsrl/issues/new)
 
 ### CHANGELOG
 
-See [`CHANGELOG.md`](https://github.com/maliceio/malice-nsrl/blob/master/CHANGELOG.md)
+See [`CHANGELOG.md`](https://github.com/malice-plugins/nsrl/blob/master/CHANGELOG.md)
 
 ### Contributing
 
-[See all contributors on GitHub](https://github.com/maliceio/malice-nsrl/graphs/contributors).
+[See all contributors on GitHub](https://github.com/malice-plugins/nsrl/graphs/contributors).
 
-Please update the [CHANGELOG.md](https://github.com/maliceio/malice-nsrl/blob/master/CHANGELOG.md) and submit a [Pull Request on GitHub](https://help.github.com/articles/using-pull-requests/).
+Please update the [CHANGELOG.md](https://github.com/malice-plugins/nsrl/blob/master/CHANGELOG.md) and submit a [Pull Request on GitHub](https://help.github.com/articles/using-pull-requests/).
 
 ### License
 

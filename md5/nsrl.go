@@ -6,6 +6,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -17,8 +18,8 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/fatih/structs"
 	"github.com/gorilla/mux"
-	"github.com/maliceio/go-plugin-utils/database/elasticsearch"
-	"github.com/maliceio/go-plugin-utils/utils"
+	"github.com/malice-plugins/go-plugin-utils/database/elasticsearch"
+	"github.com/malice-plugins/go-plugin-utils/utils"
 	"github.com/parnurzeal/gorequest"
 	"github.com/urfave/cli"
 	"github.com/willf/bloom"
@@ -33,6 +34,9 @@ var (
 
 	// ErrorRate stores the bloomfilter desired error-rate
 	ErrorRate string
+
+	// HashType is the type of hash to use to build the bloomfilter
+	HashType string
 )
 
 const (
@@ -64,16 +68,21 @@ type Nsrl struct {
 
 // ResultsData json object
 type ResultsData struct {
-	Found bool `json:"found"`
+	Found    bool   `json:"found"`
+	MarkDown string `json:"markdown,omitempty" structs:"markdown,omitempty"`
 }
 
-func printMarkDownTable(nsrl Nsrl) {
-	fmt.Println("#### NSRL Database")
-	if nsrl.Results.Found {
-		fmt.Println(" - Found :white_check_mark:")
-	} else {
-		fmt.Println(" - Not Found :grey_question:")
+func generateMarkDownTable(b Bitdefender) string {
+	var tplOut bytes.Buffer
+
+	t := template.Must(template.New("bit").Parse(tpl))
+
+	err := t.Execute(&tplOut, b)
+	if err != nil {
+		log.Println("executing template:", err)
 	}
+
+	return tplOut.String()
 }
 
 func lineCounter(r io.Reader) (uint64, error) {
@@ -298,9 +307,9 @@ func main() {
 					}
 
 					nsrl := Nsrl{Results: lookUp(hash, c.GlobalInt("timeout"))}
-
-					// upsert into Database
-					elasticsearch.InitElasticSearch(elastic)
+					nsrl.Results.MarkDown =
+						// upsert into Database
+						elasticsearch.InitElasticSearch(elastic)
 					elasticsearch.WritePluginResultsToDatabase(elasticsearch.PluginResults{
 						ID:       utils.Getopt("MALICE_SCANID", hash),
 						Name:     name,

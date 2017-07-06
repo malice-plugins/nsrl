@@ -19,4 +19,4 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
--	Upgrade Golang to 1.7.5
+-	Upgrade Golang to 1.8.3
