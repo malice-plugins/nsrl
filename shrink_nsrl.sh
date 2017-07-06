@@ -3,7 +3,7 @@
 # copyright: (c) 2014 by Josh "blacktop" Maine.
 # license: MIT
 
-if [ -f /nsrl/*.zip ]; then
+if ls /nsrl/*.zip 1> /dev/null 2>&1; then
    echo "File '.zip' Exists."
 else
     echo "[INFO] Downloading NSRL Reduced Sets..."

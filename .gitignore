@@ -35,8 +35,5 @@ _testmain.go
 *.pyc
 
 LINECOUNT
-nsrl
-
 *.old
-
 *.bu
