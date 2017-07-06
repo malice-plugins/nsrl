@@ -6,6 +6,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -67,16 +68,22 @@ type Nsrl struct {
 
 // ResultsData json object
 type ResultsData struct {
-	Found bool `json:"found"`
+	Found    bool   `json:"found"`
+	Hash     string `json:"hash"`
+	MarkDown string `json:"markdown,omitempty" structs:"markdown,omitempty"`
 }
 
-func printMarkDownTable(nsrl Nsrl) {
-	fmt.Println("#### NSRL Database")
-	if nsrl.Results.Found {
-		fmt.Println(" - Found :white_check_mark:")
-	} else {
-		fmt.Println(" - Not Found :grey_question:")
+func generateMarkDownTable(n Nsrl) string {
+	var tplOut bytes.Buffer
+
+	t := template.Must(template.New("nsrl").Parse(tpl))
+
+	err := t.Execute(&tplOut, n)
+	if err != nil {
+		log.Println("executing template:", err)
 	}
+
+	return tplOut.String()
 }
 
 func lineCounter(r io.Reader) (uint64, error) {
@@ -107,6 +114,7 @@ func buildFilter() {
 	defer nsrlDB.Close()
 	// count lines in NSRL database
 	lines, err := lineCounter(nsrlDB)
+	utils.Assert(err)
 	log.Debugf("Number of lines in NSRLFile.txt: %d", lines)
 	// write line count to file LINECOUNT
 	buf := new(bytes.Buffer)
@@ -163,6 +171,8 @@ func lookUp(hash string, timeout int) ResultsData {
 
 	// Create new bloomfilter with size = number of lines in NSRL database
 	erate, err := strconv.ParseFloat(ErrorRate, 64)
+	utils.Assert(err)
+
 	filter := bloom.NewWithEstimates(uint(lines), erate)
 
 	// load NSRL bloomfilter from file
@@ -293,7 +303,7 @@ func main() {
 					hashType, _ := utils.GetHashType(hash)
 
 					if !strings.EqualFold(hashType, "sha1") {
-						log.Fatal(fmt.Errorf("Please supply a valid SHA1 hash to query NSRL with."))
+						log.Fatal(fmt.Errorf("please supply a valid SHA1 hash to query NSRL with"))
 					}
 
 					if c.GlobalBool("verbose") {
@@ -301,6 +311,8 @@ func main() {
 					}
 
 					nsrl := Nsrl{Results: lookUp(hash, c.GlobalInt("timeout"))}
+					nsrl.Results.Hash = hash
+					nsrl.Results.MarkDown = generateMarkDownTable(nsrl)
 
 					// upsert into Database
 					elasticsearch.InitElasticSearch(elastic)
@@ -312,8 +324,9 @@ func main() {
 					})
 
 					if c.GlobalBool("table") {
-						printMarkDownTable(nsrl)
+						fmt.Println(nsrl.Results.MarkDown)
 					} else {
+						nsrl.Results.MarkDown = ""
 						nsrlJSON, err := json.Marshal(nsrl)
 						utils.Assert(err)
 						if c.GlobalBool("post") {
@@ -331,7 +344,7 @@ func main() {
 						fmt.Println(string(nsrlJSON))
 					}
 				} else {
-					log.Fatal(fmt.Errorf("Please supply a SHA1 hash to query NSRL with."))
+					log.Fatal(fmt.Errorf("please supply a SHA1 hash to query NSRL with"))
 				}
 				return nil
 			},

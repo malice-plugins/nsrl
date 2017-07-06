@@ -24,6 +24,12 @@ cd /nsrl && /bin/nsrl --verbose build
 echo "[INFO] Listing created files ..."
 ls -lah /nsrl
 
+echo "[INFO] Saving uncompressed NSRL DB size..."
+ls -lah NSRLFile.txt | awk '{print $5}' > /nsrl/DBSZIE
+
+echo "[INFO] Saving bloomfilter size..."
+ls -lah nsrl.bloom | awk '{print $5}' > /nsrl/BLOOMSIZE
+
 echo "[INFO] Deleting all unused files ..."
 rm -f *.zip *.txt *.sh
 ls -lah /nsrl

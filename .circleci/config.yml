@@ -43,6 +43,15 @@ jobs:
           command: |
             mkdir /tmp/artifacts;
             docker images --format "{{.Size}}" app > /tmp/artifacts/size;
+      - run:
+          name: Get NSRL DB size
+          command: |
+            docker run --name app app
+            docker cp app:/nsrl/DBSZIE /tmp/artifacts/nsrl
+      - run:
+          name: Get bloomfilter size
+          command: |
+            docker cp app:/nsrl/BLOOMSIZE /tmp/artifacts/bloom            
       - store_artifacts:
           path: /tmp/artifacts
       - run:
