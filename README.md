@@ -1,7 +1,6 @@
 ![NSRL logo](https://raw.githubusercontent.com/malice-plugins/nsrl/master/docs/logo.png)
 
-malice-nsrl
-===========
+# malice-nsrl
 
 [![Circle CI](https://circleci.com/gh/malice-plugins/nsrl.png?style=shield)](https://circleci.com/gh/malice-plugins/nsrl) [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) [![Docker Stars](https://img.shields.io/docker/stars/malice/nsrl.svg)](https://hub.docker.com/r/malice/nsrl/) [![Docker Pulls](https://img.shields.io/docker/pulls/malice/nsrl.svg)](https://hub.docker.com/r/malice/nsrl/) [![Docker Image](https://img.shields.io/badge/docker%20image-80.8MB-blue.svg)](https://hub.docker.com/r/malice/nsrl/)
 
@@ -11,12 +10,12 @@ This repository contains a **Dockerfile** of the [NSRL](http://www.nsrl.nist.gov
 
 ### Dependencies
 
--	[malice/alpine](https://hub.docker.com/r/malice/alpine/)
+- [malice/alpine](https://hub.docker.com/r/malice/alpine/)
 
 ### Installation
 
-1.	Install [Docker](https://www.docker.io/).
-2.	Download [trusted build](https://hub.docker.com/r/malice/nsrl/) from public [DockerHub](https://hub.docker.com): `docker pull malice/nsrl`
+1.  Install [Docker](https://www.docker.io/).
+2.  Download [trusted build](https://hub.docker.com/r/malice/nsrl/) from public [DockerHub](https://hub.docker.com): `docker pull malice/nsrl`
 
 ### Usage
 
@@ -40,7 +39,7 @@ Options:
   --post, -p		POST results to Malice webhook [$MALICE_ENDPOINT]
   --proxy, -x		proxy settings for Malice webhook endpoint [$MALICE_PROXY]
   --table, -t		output as Markdown table
-  --timeout value       malice plugin timeout (in seconds) (default: 10) [$MALICE_TIMEOUT]    
+  --timeout value       malice plugin timeout (in seconds) (default: 10) [$MALICE_TIMEOUT]
   --elasitcsearch value	elasitcsearch address for Malice to store results [$MALICE_ELASTICSEARCH]
   --help, -h		show help
   --version, -v		print the version
@@ -54,8 +53,7 @@ Commands:
 Run 'nsrl COMMAND --help' for more information on a command.
 ```
 
-Sample Output
--------------
+## Sample Output
 
 ### JSON:
 
@@ -77,16 +75,15 @@ Sample Output
 
 #### NSRL Database
 
--	Found :white_check_mark:
+- Found :white_check_mark:
 
 ---
 
-Documentation
--------------
+## Documentation
 
--	[To write results to ElasticSearch](https://github.com/malice-plugins/nsrl/blob/master/docs/elasticsearch.md)
--	[To create a nsrl lookup micro-service](https://github.com/malice-plugins/nsrl/blob/master/docs/web.md)
--	[To post results to a webhook](https://github.com/malice-plugins/nsrl/blob/master/docs/callback.md)
+- [To write results to ElasticSearch](https://github.com/malice-plugins/nsrl/blob/master/docs/elasticsearch.md)
+- [To create a nsrl lookup micro-service](https://github.com/malice-plugins/nsrl/blob/master/docs/web.md)
+- [To post results to a webhook](https://github.com/malice-plugins/nsrl/blob/master/docs/callback.md)
 
 ### Issues
 
@@ -104,4 +101,4 @@ Please update the [CHANGELOG.md](https://github.com/malice-plugins/nsrl/blob/mas
 
 ### License
 
-MIT Copyright (c) 2016-2017 **blacktop**
+MIT Copyright (c) 2016-2018 **blacktop**

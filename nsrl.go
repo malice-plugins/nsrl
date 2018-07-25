@@ -21,8 +21,8 @@ import (
 	"github.com/malice-plugins/go-plugin-utils/database/elasticsearch"
 	"github.com/malice-plugins/go-plugin-utils/utils"
 	"github.com/parnurzeal/gorequest"
-	"github.com/urfave/cli"
 	"github.com/willf/bloom"
+	"gopkg.in/urfave/cli.v1"
 )
 
 var (
@@ -241,33 +241,6 @@ func main() {
 			Name:  "verbose, V",
 			Usage: "verbose output",
 		},
-		cli.StringFlag{
-			Name:        "elasitcsearch",
-			Value:       "",
-			Usage:       "elasitcsearch address for Malice to store results",
-			EnvVar:      "MALICE_ELASTICSEARCH",
-			Destination: &elastic,
-		},
-		cli.BoolFlag{
-			Name:   "post, p",
-			Usage:  "POST results to Malice webhook",
-			EnvVar: "MALICE_ENDPOINT",
-		},
-		cli.BoolFlag{
-			Name:   "proxy, x",
-			Usage:  "proxy settings for Malice webhook endpoint",
-			EnvVar: "MALICE_PROXY",
-		},
-		cli.BoolFlag{
-			Name:  "table, t",
-			Usage: "output as Markdown table",
-		},
-		cli.IntFlag{
-			Name:   "timeout",
-			Value:  10,
-			Usage:  "malice plugin timeout (in seconds)",
-			EnvVar: "MALICE_TIMEOUT",
-		},
 	}
 	app.Commands = []cli.Command{
 		{
@@ -297,6 +270,35 @@ func main() {
 			Aliases:   []string{"l"},
 			Usage:     "Query NSRL for hash",
 			ArgsUsage: "SHA1 to query NSRL with",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:        "elasitcsearch",
+					Value:       "",
+					Usage:       "elasitcsearch address for Malice to store results",
+					EnvVar:      "MALICE_ELASTICSEARCH",
+					Destination: &elastic,
+				},
+				cli.BoolFlag{
+					Name:   "post, p",
+					Usage:  "POST results to Malice webhook",
+					EnvVar: "MALICE_ENDPOINT",
+				},
+				cli.BoolFlag{
+					Name:   "proxy, x",
+					Usage:  "proxy settings for Malice webhook endpoint",
+					EnvVar: "MALICE_PROXY",
+				},
+				cli.IntFlag{
+					Name:   "timeout",
+					Value:  10,
+					Usage:  "malice plugin timeout (in seconds)",
+					EnvVar: "MALICE_TIMEOUT",
+				},
+				cli.BoolFlag{
+					Name:  "table, t",
+					Usage: "output as Markdown table",
+				},
+			},
 			Action: func(c *cli.Context) error {
 				if c.Args().Present() {
 					hash := strings.ToUpper(c.Args().First())
