@@ -57,7 +57,7 @@ jobs:
           command: |
             set -x
             docker run --rm app -V lookup 6b82f126555e7644816df5d4e4614677ee0bda5c | jq .
-            docker run --rm app -t lookup 6b82f126555e7644816df5d4e4614677ee0bda5c
+            docker run --rm app lookup -t 6b82f126555e7644816df5d4e4614677ee0bda5c
       # - run:
       #     name: Review results
       #     command: |
