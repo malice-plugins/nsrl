@@ -24,6 +24,7 @@ RUN apk add --no-cache -t .build-deps \
   git \
   gcc \
   go \
+  && set -ex \
   && echo "===> Building info Go binary..." \
   && cd /go/src/github.com/malice-plugins/nsrl \
   && export GOPATH=/go \
