@@ -19,6 +19,7 @@ RUN apk add --no-cache -t .build-deps \
   musl-dev \
   openssl \
   p7zip \
+  unzip \
   bash \
   wget \
   git \

@@ -16,7 +16,6 @@ else
     wget --progress=bar:force -P /nsrl/ $RDS_SHA_URL
     echo " * files downloaded"
     ls -lah /nsrl
-    sha1sum /nsrl/rds_modernm.zip
     RDS_SHA1=$(cat /nsrl/rds_modernm.zip.sha | grep -o -E -e "[0-9a-f]{40}")
     echo " * checking downloaded ZIPs sha1 hash"
     if [ "$RDS_SHA1" ]; then
@@ -25,7 +24,8 @@ else
 fi
 
 echo "[INFO] Unzip NSRL Database zip to /nsrl/ ..."
-7za x -o/nsrl/ /nsrl/*.zip
+# 7za x -o/nsrl/ /nsrl/*.zip
+unzip *.zip
 
 echo "[INFO] Build bloomfilter from NSRL Database ..."
 cd /nsrl && /bin/nsrl --verbose build
