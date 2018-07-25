@@ -3,16 +3,22 @@
 # copyright: (c) 2014 by Josh "blacktop" Maine.
 # license: MIT
 
+set -ex
+
+RDS_URL=https://s3.amazonaws.com/rds.nsrl.nist.gov/RDS/current/rds_modernm.zip
+RDS_SHA_URL=https://s3.amazonaws.com/rds.nsrl.nist.gov/RDS/current/rds_modernm.zip.sha
+
 if ls /nsrl/*.zip 1> /dev/null 2>&1; then
    echo "File '.zip' Exists."
 else
     echo "[INFO] Downloading NSRL Reduced Sets..."
-    NSRL_URL="http://www.nsrl.nist.gov/"
-    MIN_SET=$(wget -O - ${NSRL_URL}Downloads.htm 2> /dev/null | \
-      grep -m 1  "Minimal set" | \
-      grep -o '<a href=['"'"'"][^"'"'"']*['"'"'"]' | \
-      sed -e 's/^<a href=["'"'"']//' -e 's/["'"'"']$//')
-    wget -P /nsrl/ $NSRL_URL$MIN_SET 2> /dev/null
+    wget --progress=bar:force -P /nsrl/ $RDS_URL
+    wget --progress=bar:force -P /nsrl/ $RDS_SHA_URL
+    RDS_SHA1=$(cat rds_modernm.zip.sha | grep -o -E -e "[0-9a-f]{40}")
+    echo " * checking downloaded ZIPs sha1 hash"
+    if [ "$RDS_SHA1" ]; then
+      echo "$RDS_SHA1 *rds_modernm.zip" | sha1sum -c -; \
+    fi
 fi
 
 echo "[INFO] Unzip NSRL Database zip to /nsrl/ ..."
