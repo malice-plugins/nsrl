@@ -28,10 +28,10 @@ echo "[INFO] Unzip NSRL Database zip to /nsrl/ ..."
 cd /nsrl && unzip *.zip
 
 echo "[INFO] Build bloomfilter from NSRL Database ..."
-/bin/nsrl --verbose build
+cd rds_modernm && /bin/nsrl --verbose build
 
 echo "[INFO] Listing created files ..."
-ls -lah /nsrl
+ls -lah /nsrl/rds_modernm
 
 echo "[INFO] Saving uncompressed NSRL DB size..."
 ls -lah NSRLFile.txt | awk '{print $5}' > /nsrl/DBSZIE
@@ -40,5 +40,6 @@ echo "[INFO] Saving bloomfilter size..."
 ls -lah nsrl.bloom | awk '{print $5}' > /nsrl/BLOOMSIZE
 
 echo "[INFO] Deleting all unused files ..."
+rm -rf /nsrl/rds_modernm
 rm -f *.zip *.txt *.sh *.sha
 ls -lah /nsrl
