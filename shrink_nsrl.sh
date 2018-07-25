@@ -40,5 +40,5 @@ echo "[INFO] Saving bloomfilter size..."
 ls -lah nsrl.bloom | awk '{print $5}' > /nsrl/BLOOMSIZE
 
 echo "[INFO] Deleting all unused files ..."
-rm -f *.zip *.txt *.sh
+rm -f *.zip *.txt *.sh *.sha
 ls -lah /nsrl
