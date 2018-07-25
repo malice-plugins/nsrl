@@ -325,15 +325,15 @@ func main() {
 						Data:     structs.Map(nsrl.Results),
 					})
 
-					if c.GlobalBool("table") {
+					if c.Bool("table") {
 						fmt.Println(nsrl.Results.MarkDown)
 					} else {
 						nsrl.Results.MarkDown = ""
 						nsrlJSON, err := json.Marshal(nsrl)
 						utils.Assert(err)
-						if c.GlobalBool("post") {
+						if c.Bool("post") {
 							request := gorequest.New()
-							if c.GlobalBool("proxy") {
+							if c.Bool("proxy") {
 								request = gorequest.New().Proxy(os.Getenv("MALICE_PROXY"))
 							}
 							request.Post(os.Getenv("MALICE_ENDPOINT")).
