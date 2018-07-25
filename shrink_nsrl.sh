@@ -17,7 +17,7 @@ else
     RDS_SHA1=$(cat /nsrl/rds_modernm.zip.sha | grep -o -E -e "[0-9a-f]{40}")
     echo " * checking downloaded ZIPs sha1 hash"
     if [ "$RDS_SHA1" ]; then
-      echo "$RDS_SHA1 *rds_modernm.zip" | sha1sum -c -; \
+      echo "$RDS_SHA1 /nsrl/rds_modernm.zip" | sha1sum -c -; \
     fi
 fi
 
