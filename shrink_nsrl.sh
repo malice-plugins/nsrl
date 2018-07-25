@@ -25,10 +25,10 @@ fi
 
 echo "[INFO] Unzip NSRL Database zip to /nsrl/ ..."
 # 7za x -o/nsrl/ /nsrl/*.zip
-unzip *.zip
+cd /nsrl && unzip *.zip
 
 echo "[INFO] Build bloomfilter from NSRL Database ..."
-cd /nsrl && /bin/nsrl --verbose build
+/bin/nsrl --verbose build
 
 echo "[INFO] Listing created files ..."
 ls -lah /nsrl
