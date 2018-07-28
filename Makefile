@@ -1,9 +1,9 @@
 REPO=malice-plugins/nsrl
 ORG=malice
 NAME=nsrl
-VERSION=?= sha1
+VERSION?=sha1
 
-all: build size test avtest gotest
+all: build size tag test avtest gotest
 
 build:
 	cd $(VERSION); docker build -t $(ORG)/$(NAME):$(VERSION) .
@@ -16,6 +16,10 @@ dev:
 
 size:
 	sed -i.bu 's/docker%20image-.*-blue/docker%20image-$(shell docker images --format "{{.Size}}" $(ORG)/$(NAME):$(VERSION)| cut -d' ' -f1)-blue/' README.md
+
+.PHONY: tag
+tag:
+	docker tag $(ORG)/$(NAME):$(VERSION) $(ORG)/$(NAME):latest
 
 tags:
 	docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}" $(ORG)/$(NAME)
