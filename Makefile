@@ -1,8 +1,11 @@
 REPO=malice-plugins/nsrl
 ORG=malice
 NAME=nsrl
-CATEGORY=av
+CATEGORY=intel
 VERSION?=sha1
+
+FOUND_HASH=5a272b7441328e09704b6d7eabdbd51b8858fde4
+MISSING_HASH=6b82f126555e7644816df5d4e4614677ee0bdacc
 
 all: build size tag test test_markdown
 
@@ -41,22 +44,22 @@ else
 endif
 
 .PHONY: test
-test: start_elasticsearch
+test:
 	@echo "===> ${NAME} --help"
 	@docker run --rm $(ORG)/$(NAME):$(VERSION)
 	@echo "===> ${NAME} test"
-	docker run --rm $(ORG)/$(NAME):$(VERSION) -V lookup 6b82f126555e7644816df5d4e4614677ee0bda5c > docs/results.json
+	docker run --rm $(ORG)/$(NAME):$(VERSION) -V lookup $(FOUND_HASH) > docs/results.json
 	cat docs/results.json | jq .
 	@echo "===> Test lookup NOT found"
-	@docker run --rm $(ORG)/$(NAME):$(VERSION) -V lookup 6b82f126555e7644816df5d4e4614677ee0bdacc | jq . > docs/no_results.json
+	@docker run --rm $(ORG)/$(NAME):$(VERSION) -V lookup $(MISSING_HASH) | jq . > docs/no_results.json
 	cat docs/no_results.json | jq .
 
 .PHONY: test_elastic
 test_elastic: start_elasticsearch
 	@echo "===> ${NAME} test_elastic"
-	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH=elasticsearch $(ORG)/$(NAME):$(VERSION) -V lookup 6b82f126555e7644816df5d4e4614677ee0bda5c
+	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH=elasticsearch $(ORG)/$(NAME):$(VERSION) -V lookup $(FOUND_HASH)
 	@echo "===> ${NAME} test_elastic NOT found"
-	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH=elasticsearch $(ORG)/$(NAME):$(VERSION) -V lookup 6b82f126555e7644816df5d4e4614677ee0bdacc
+	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH=elasticsearch $(ORG)/$(NAME):$(VERSION) -V lookup $(MISSING_HASH)
 	http localhost:9200/malice/_search | jq . > docs/elastic.json
 
 .PHONY: test_markdown

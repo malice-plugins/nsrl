@@ -1,0 +1,52 @@
+{
+  "took": 4,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": 2,
+    "max_score": 1,
+    "hits": [
+      {
+        "_index": "malice",
+        "_type": "samples",
+        "_id": "ZXMi42QB1NUNkVnuQ2hK",
+        "_score": 1,
+        "_source": {
+          "plugins": {
+            "intel": {
+              "nsrl": {
+                "Found": true,
+                "Hash": "5A272B7441328E09704B6D7EABDBD51B8858FDE4",
+                "markdown": "#### NSRL Database\n - Found :white_check_mark:\n"
+              }
+            }
+          },
+          "scan_date": "2018-07-28T23:03:50.844966825Z"
+        }
+      },
+      {
+        "_index": "malice",
+        "_type": "samples",
+        "_id": "ZnMi42QB1NUNkVnuSmhy",
+        "_score": 1,
+        "_source": {
+          "plugins": {
+            "intel": {
+              "nsrl": {
+                "Found": false,
+                "Hash": "6B82F126555E7644816DF5D4E4614677EE0BDACC",
+                "markdown": "#### NSRL Database\n - Not Found :grey_question:\n"
+              }
+            }
+          },
+          "scan_date": "2018-07-28T23:03:52.686854034Z"
+        }
+      }
+    ]
+  }
+}
