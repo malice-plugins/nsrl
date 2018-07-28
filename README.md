@@ -62,7 +62,8 @@ Run 'nsrl COMMAND --help' for more information on a command.
 ```json
 {
   "nsrl": {
-    "found": true
+    "found": true,
+    "hash": "5A272B7441328E09704B6D7EABDBD51B8858FDE4"
   }
 }
 ```

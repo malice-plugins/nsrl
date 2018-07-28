@@ -1,6 +1,7 @@
 #### NSRL Database
- - Found :white_check_mark:
+
+- Found :white_check_mark:
 
 #### NSRL Database
- - Not Found :grey_question:
 
+- Not Found :question:

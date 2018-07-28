@@ -4,7 +4,7 @@ const tpl = `#### NSRL Database
 {{- if .Results.Found }}
  - Found :white_check_mark:
 {{else}}
- - Not Found :grey_question:
+ - Not Found :question:
 {{ end -}}
 `
 
