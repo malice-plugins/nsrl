@@ -5,6 +5,7 @@
 .circleci*
 docs*
 tests*
+vendor*
 
 .DS_Store
 logo.png

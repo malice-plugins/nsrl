@@ -1,6 +1,7 @@
 REPO=malice-plugins/nsrl
 ORG=malice
 NAME=nsrl
+CATEGORY=av
 VERSION?=sha1
 
 all: build size tag test test_markdown
@@ -29,28 +30,40 @@ ssh:
 tar:
 	docker save $(ORG)/$(NAME):$(VERSION) -o $(NAME).tar
 
-.PHONY: test
-test:
-	@echo "===> ${NAME} --help"
-	@docker run --rm $(ORG)/$(NAME):$(VERSION)
-	@echo "===> ${NAME} test"
-	docker run --rm --link elasticsearch $(ORG)/$(NAME):$(VERSION) -V lookup 6b82f126555e7644816df5d4e4614677ee0bda5c > docs/results.json
-	cat docs/results.json | jq .
-
-.PHONY: test_elastic
-test_elastic:
+.PHONY: start_elasticsearch
+start_elasticsearch:
+ifeq ("$(shell docker inspect -f {{.State.Running}} elasticsearch)", "true")
+	@echo "===> elasticsearch already running"
+else
 	@echo "===> Starting elasticsearch"
 	@docker rm -f elasticsearch || true
 	@docker run --init -d --name elasticsearch -p 9200:9200 malice/elasticsearch:6.3; sleep 10
+endif
+
+.PHONY: test
+test: start_elasticsearch
+	@echo "===> ${NAME} --help"
+	@docker run --rm $(ORG)/$(NAME):$(VERSION)
+	@echo "===> ${NAME} test"
+	docker run --rm $(ORG)/$(NAME):$(VERSION) -V lookup 6b82f126555e7644816df5d4e4614677ee0bda5c > docs/results.json
+	cat docs/results.json | jq .
+	@echo "===> Test lookup NOT found"
+	@docker run --rm $(ORG)/$(NAME):$(VERSION) -V lookup 6b82f126555e7644816df5d4e4614677ee0bdacc | jq . > docs/no_results.json
+	cat docs/no_results.json | jq .
+
+.PHONY: test_elastic
+test_elastic: start_elasticsearch
 	@echo "===> ${NAME} test_elastic"
 	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH=elasticsearch $(ORG)/$(NAME):$(VERSION) -V lookup 6b82f126555e7644816df5d4e4614677ee0bda5c
+	@echo "===> ${NAME} test_elastic NOT found"
+	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH=elasticsearch $(ORG)/$(NAME):$(VERSION) -V lookup 6b82f126555e7644816df5d4e4614677ee0bdacc
 	http localhost:9200/malice/_search | jq . > docs/elastic.json
 
 .PHONY: test_markdown
 test_markdown: test_elastic
-	@echo "===> ${NAME} test_elastic"
+	@echo "===> ${NAME} test_markdown"
 	http localhost:9200/malice/_search | jq . > docs/elastic.json
-	cat docs/elastic.json | jq -r '.hits.hits[] ._source.plugins.av.${NAME}.markdown' > docs/SAMPLE.md
+	cat docs/elastic.json | jq -r '.hits.hits[] ._source.plugins.${CATEGORY}.${NAME}.markdown' > docs/SAMPLE.md
 
 .PHONY: circle
 circle: ci-size

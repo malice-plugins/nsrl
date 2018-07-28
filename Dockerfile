@@ -24,6 +24,7 @@ RUN apk add --no-cache -t .build-deps \
   wget \
   git \
   gcc \
+  dep \
   go \
   && set -ex \
   && echo "===> Building info Go binary..." \
@@ -33,7 +34,7 @@ RUN apk add --no-cache -t .build-deps \
   && export CGO_CFLAGS="-I/usr/local/include" \
   && export CGO_LDFLAGS="-L/usr/local/lib" \
   && go version \
-  && go get \
+  && dep ensure \
   && go build -ldflags "-s -w -X main.HashType=$HASH \
   -X main.ErrorRate=$(cat ERROR) \
   -X main.Version=$(cat VERSION) \
