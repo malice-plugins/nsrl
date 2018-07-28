@@ -3,7 +3,7 @@ ORG=malice
 NAME=nsrl
 VERSION?=sha1
 
-all: build size tag test avtest gotest
+all: build size tag test test_markdown
 
 .PHONY: build
 build:
