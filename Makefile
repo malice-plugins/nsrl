@@ -31,9 +31,13 @@ tar:
 	docker save $(ORG)/$(NAME):$(VERSION) -o $(NAME).tar
 
 test:
-	docker run --init -d --name elasticsearch -p 9200:9200 blacktop/elasticsearch
-	sleep 10; docker run --init --rm $(ORG)/$(NAME):$(VERSION)
-	docker run --rm $(REPO)/$(NAME):$(BUILD) -V lookup 6b82f126555e7644816df5d4e4614677ee0bda5c > results.json
+	@echo "===> Starting elasticsearch"
+	@docker rm -f elasticsearch || true
+	@docker run --init -d --name elasticsearch -p 9200:9200 malice/elasticsearch:6.3
+	@echo "===> ${NAME} --help"
+	@docker run --rm $(ORG)/$(NAME):$(VERSION); sleep 10
+	@echo "===> ${NAME} test"
+	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH=elasticsearch $(ORG)/$(NAME):$(VERSION) -V lookup 6b82f126555e7644816df5d4e4614677ee0bda5c > results.json
 	cat docs/results.json | jq .
 	http localhost:9200/malice/_search | jq . > docs/elastic.json
 	cat docs/elastic.json | jq -r '.hits.hits[] ._source.plugins.av.${NAME}.markdown' > docs/SAMPLE.md
