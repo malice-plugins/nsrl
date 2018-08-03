@@ -7,7 +7,7 @@ VERSION?=sha1
 FOUND_HASH=5a272b7441328e09704b6d7eabdbd51b8858fde4
 MISSING_HASH=6b82f126555e7644816df5d4e4614677ee0bdacc
 
-all: build size tag test test_markdown
+all: build size tag test_all
 
 .PHONY: build
 build:
@@ -36,12 +36,14 @@ tar:
 .PHONY: start_elasticsearch
 start_elasticsearch:
 ifeq ("$(shell docker inspect -f {{.State.Running}} elasticsearch)", "true")
-	@echo "===> elasticsearch already running"
-else
-	@echo "===> Starting elasticsearch"
+	@echo "===> elasticsearch already running.  Stopping now..."
 	@docker rm -f elasticsearch || true
-	@docker run --init -d --name elasticsearch -p 9200:9200 malice/elasticsearch:6.3; sleep 10
 endif
+	@echo "===> Starting elasticsearch"
+	@docker run --init -d --name elasticsearch -p 9200:9200 malice/elasticsearch:6.3; sleep 15
+
+.PHONY: test_all
+test_all: test test_elastic test_markdown test_web
 
 .PHONY: test
 test:
@@ -63,10 +65,22 @@ test_elastic: start_elasticsearch
 	http localhost:9200/malice/_search | jq . > docs/elastic.json
 
 .PHONY: test_markdown
-test_markdown: test_elastic
+test_markdown:
 	@echo "===> ${NAME} test_markdown"
 	http localhost:9200/malice/_search | jq . > docs/elastic.json
 	cat docs/elastic.json | jq -r '.hits.hits[] ._source.plugins.${CATEGORY}.${NAME}.markdown' > docs/SAMPLE.md
+
+.PHONY: test_web
+test_web: stop
+	@echo "===> ${NAME} web service"
+	@docker run --init -d --name $(NAME) -p 3993:3993 $(ORG)/$(NAME):$(VERSION) -V web
+	http -f localhost:3993/lookup/$(FOUND_HASH)
+	http -f localhost:3993/lookup/$(MISSING_HASH)
+
+.PHONY: stop
+stop:
+	@echo "===> Stopping container ${NAME}"
+	@docker container rm -f $(NAME) || true
 
 .PHONY: circle
 circle: ci-size
