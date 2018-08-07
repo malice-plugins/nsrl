@@ -9,7 +9,7 @@ INFO[0000] web service listening on port :3993
 Now you can perform queries like so
 
 ```bash
-$ http localhost:3993/lookup/60B7C0FEAD45F2066E5B805A91F4F0FC
+$ http localhost:3993/lookup/5a272b7441328e09704b6d7eabdbd51b8858fde4
 ```
 
 ```bash
