@@ -238,9 +238,9 @@ func main() {
 			Usage: "verbose output",
 		},
 		cli.StringFlag{
-			Name:        "elasitcsearch",
+			Name:        "elasticsearch",
 			Value:       "",
-			Usage:       "elasitcsearch address for Malice to store results",
+			Usage:       "elasticsearch address for Malice to store results",
 			EnvVar:      "MALICE_ELASTICSEARCH",
 			Destination: &elastic,
 		},

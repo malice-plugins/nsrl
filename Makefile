@@ -64,6 +64,11 @@ test_elastic: start_elasticsearch
 	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH=elasticsearch $(ORG)/$(NAME):$(VERSION) -V lookup $(MISSING_HASH)
 	http localhost:9200/malice/_search | jq . > docs/elastic.json
 
+.PHONY: test_elastic_cli
+test_elastic_cli: start_elasticsearch
+	@echo "===> ${NAME} test_elastic"
+	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH=elasticsearch $(ORG)/$(NAME):$(VERSION) -V lookup $(FOUND_HASH)
+
 .PHONY: test_markdown
 test_markdown:
 	@echo "===> ${NAME} test_markdown"

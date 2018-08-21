@@ -274,9 +274,9 @@ func main() {
 			ArgsUsage: "SHA1 to query NSRL with",
 			Flags: []cli.Flag{
 				cli.StringFlag{
-					Name:        "elasitcsearch",
+					Name:        "elasticsearch",
 					Value:       "",
-					Usage:       "elasitcsearch address for Malice to store results",
+					Usage:       "elasticsearch address for Malice to store results",
 					EnvVar:      "MALICE_ELASTICSEARCH",
 					Destination: &es.Host,
 				},
@@ -319,10 +319,10 @@ func main() {
 					nsrl.Results.MarkDown = generateMarkDownTable(nsrl)
 
 					// upsert into Database
-					if len(c.String("elasitcsearch")) > 0 {
+					if len(c.String("elasticsearch")) > 0 {
 						err := es.Init()
 						if err != nil {
-							return errors.Wrap(err, "failed to initalize elasitcsearch")
+							return errors.Wrap(err, "failed to initalize elasticsearch")
 						}
 						err = es.StorePluginResults(database.PluginResults{
 							ID:       utils.Getopt("MALICE_SCANID", hash),

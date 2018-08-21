@@ -40,7 +40,7 @@ Options:
   --proxy, -x		proxy settings for Malice webhook endpoint [$MALICE_PROXY]
   --table, -t		output as Markdown table
   --timeout value       malice plugin timeout (in seconds) (default: 10) [$MALICE_TIMEOUT]
-  --elasitcsearch value	elasitcsearch address for Malice to store results [$MALICE_ELASTICSEARCH]
+  --elasticsearch value	elasticsearch address for Malice to store results [$MALICE_ELASTICSEARCH]
   --help, -h		show help
   --version, -v		print the version
 
