@@ -227,7 +227,7 @@ func printStatus(resp gorequest.Response, body string, errs []error) {
 
 func main() {
 
-	es := elasticsearch.Database{Index: "malice", Type: "samples"}
+	es := elasticsearch.Database{Index: utils.Getopt("MALICE_ELASTICSEARCH_INDEX", "malice"), Type: "samples"}
 
 	cli.AppHelpTemplate = utils.AppHelpTemplate
 	app := cli.NewApp()
@@ -276,9 +276,9 @@ func main() {
 				cli.StringFlag{
 					Name:        "elasticsearch",
 					Value:       "",
-					Usage:       "elasticsearch address for Malice to store results",
-					EnvVar:      "MALICE_ELASTICSEARCH",
-					Destination: &es.Host,
+					Usage:       "elasticsearch url for Malice to store results",
+					EnvVar:      "MALICE_ELASTICSEARCH_URL",
+					Destination: &es.URL,
 				},
 				cli.BoolFlag{
 					Name:   "post, p",

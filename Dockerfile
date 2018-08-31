@@ -35,7 +35,7 @@ RUN apk add --no-cache -t .build-deps \
   && export CGO_LDFLAGS="-L/usr/local/lib" \
   && go version \
   && dep ensure \
-  && go build -ldflags "-s -w -X main.HashType=$HASH \
+  && go build -ldflags "-s -w -X main.HashType=${HASH} \
   -X main.ErrorRate=$(cat ERROR) \
   -X main.Version=$(cat VERSION) \
   -X main.BuildTime=$(date -u +%Y%m%d)" -o /bin/nsrl \
