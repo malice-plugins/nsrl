@@ -4,11 +4,11 @@
 
 ```bash
 $ docker volume create --name malice
-$ docker run -d --name elastic \
+$ docker run -d --name elasticsearch \
                 -p 9200:9200 \
                 -v malice:/usr/share/elasticsearch/data \
                  blacktop/elasticsearch
-$ docker run --rm --link elastic malice/nsrl HASH
+$ docker run --rm --link elasticsearch malice/nsrl HASH
 ```
 
 ## Write to an external `elasticsearch` database
@@ -18,5 +18,6 @@ $ docker run --rm \
              -e MALICE_ELASTICSEARCH_URL=$MALICE_ELASTICSEARCH_URL \
              -e MALICE_ELASTICSEARCH_USERNAME=$MALICE_ELASTICSEARCH_USERNAME \
              -e MALICE_ELASTICSEARCH_PASSWORD=$MALICE_ELASTICSEARCH_PASSWORD \
+             -e MALICE_ELASTICSEARCH_INDEX="test" \
               malice/nsrl -V lookup SHA1_HASH
 ```

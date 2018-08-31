@@ -64,10 +64,15 @@ test_elastic: start_elasticsearch
 	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH=elasticsearch $(ORG)/$(NAME):$(VERSION) -V lookup $(MISSING_HASH)
 	http localhost:9200/malice/_search | jq . > docs/elastic.json
 
-.PHONY: test_elastic_cli
-test_elastic_cli: start_elasticsearch
+.PHONY: test_elastic_remote
+test_elastic_remote:
 	@echo "===> ${NAME} test_elastic"
-	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH=elasticsearch $(ORG)/$(NAME):$(VERSION) -V lookup $(FOUND_HASH)
+	docker run --rm \
+	-e MALICE_ELASTICSEARCH_URL=${MALICE_ELASTICSEARCH_URL} \
+	-e MALICE_ELASTICSEARCH_USERNAME=${MALICE_ELASTICSEARCH_USERNAME} \
+	-e MALICE_ELASTICSEARCH_PASSWORD=${MALICE_ELASTICSEARCH_PASSWORD} \
+	-e MALICE_ELASTICSEARCH_INDEX="test" \
+	$(ORG)/$(NAME):$(VERSION) -V lookup $(FOUND_HASH)
 
 .PHONY: test_markdown
 test_markdown:
