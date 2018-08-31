@@ -12,19 +12,28 @@ This repository contains a **Dockerfile** of the [NSRL](http://www.nsrl.nist.gov
 
 - [malice/alpine](https://hub.docker.com/r/malice/alpine/)
 
-### Installation
-
-1.  Install [Docker](https://www.docker.io/).
-2.  Download [trusted build](https://hub.docker.com/r/malice/nsrl/) from public [DockerHub](https://hub.docker.com): `docker pull malice/nsrl`
-
-### Usage
+## Image Tags
 
 ```
-docker run --rm malice/nsrl:md5 lookup MD5
-docker run --rm malice/nsrl:sha1 lookup SHA1
+REPOSITORY          TAG                 SIZE
+malice/nsrl         latest              51.9MB
+malice/nsrl         0.1.0               51.9MB
+malice/nsrl         sha1                51.3MB
+malice/nsrl         md5                 51.3MB
 ```
+
+> **NOTE:** tag `sha1` can query by sha1 hash and tag `md5` can query by md5 hash
+
+## Installation
+
+1. Install [Docker](https://www.docker.io/).
+2. Download [trusted build](https://hub.docker.com/r/malice/nsrl/) from public [DockerHub](https://hub.docker.com): `docker pull malice/nsrl`
+
+## Usage
 
 ```bash
+docker run --rm malice/nsrl --help
+
 Usage: nsrl [OPTIONS] COMMAND [arg...]
 
 Malice nsrl Plugin
@@ -35,27 +44,44 @@ Author:
   blacktop - <https://github.com/blacktop>
 
 Options:
-  --verbose, -V		verbose output
-  --post, -p		POST results to Malice webhook [$MALICE_ENDPOINT]
-  --proxy, -x		proxy settings for Malice webhook endpoint [$MALICE_PROXY]
-  --table, -t		output as Markdown table
-  --timeout value       malice plugin timeout (in seconds) (default: 10) [$MALICE_TIMEOUT]
-  --elasticsearch value	elasticsearch address for Malice to store results [$MALICE_ELASTICSEARCH]
-  --help, -h		show help
-  --version, -v		print the version
+  --verbose, -V  verbose output
+  --help, -h     show help
+  --version, -v  print the version
 
 Commands:
-  web		Create a NSRL lookup web service
-  build		Build bloomfilter from NSRL database
-  lookup	Query NSRL for hash
-  help		Shows a list of commands or help for one command
+  web     Create a NSRL lookup web service
+  build   Build bloomfilter from NSRL database
+  lookup  Query NSRL for hash
+  help    Shows a list of commands or help for one command
 
 Run 'nsrl COMMAND --help' for more information on a command.
 ```
 
+### Lookup By Hash `md5|sha1`
+
+```
+docker run --rm malice/nsrl:md5 lookup MD5
+docker run --rm malice/nsrl:sha1 lookup SHA1
+```
+
+```
+NAME:
+   nsrl lookup - Query NSRL for hash
+
+USAGE:
+   nsrl lookup [command options] SHA1 to query NSRL with
+
+OPTIONS:
+   --elasticsearch value  elasticsearch url for Malice to store results [$MALICE_ELASTICSEARCH_URL]
+   --post, -p             POST results to Malice webhook [$MALICE_ENDPOINT]
+   --proxy, -x            proxy settings for Malice webhook endpoint [$MALICE_PROXY]
+   --timeout value        malice plugin timeout (in seconds) (default: 10) [$MALICE_TIMEOUT]
+   --table, -t            output as Markdown table
+```
+
 ## Sample Output
 
-### JSON:
+### [JSON](https://github.com/malice-plugins/nsrl/blob/master/docs/results.json)
 
 ---
 
@@ -70,7 +96,7 @@ Run 'nsrl COMMAND --help' for more information on a command.
 
 ---
 
-### Markdown Table:
+### [Markdown](https://github.com/malice-plugins/nsrl/blob/master/docs/SAMPLE.md)
 
 ---
 
@@ -86,20 +112,20 @@ Run 'nsrl COMMAND --help' for more information on a command.
 - [To create a nsrl lookup micro-service](https://github.com/malice-plugins/nsrl/blob/master/docs/web.md)
 - [To post results to a webhook](https://github.com/malice-plugins/nsrl/blob/master/docs/callback.md)
 
-### Issues
+## Issues
 
 Find a bug? Want more features? Find something missing in the documentation? Let me know! Please don't hesitate to [file an issue](https://github.com/malice-plugins/nsrl/issues/new)
 
-### CHANGELOG
+## CHANGELOG
 
 See [`CHANGELOG.md`](https://github.com/malice-plugins/nsrl/blob/master/CHANGELOG.md)
 
-### Contributing
+## Contributing
 
 [See all contributors on GitHub](https://github.com/malice-plugins/nsrl/graphs/contributors).
 
 Please update the [CHANGELOG.md](https://github.com/malice-plugins/nsrl/blob/master/CHANGELOG.md) and submit a [Pull Request on GitHub](https://help.github.com/articles/using-pull-requests/).
 
-### License
+## License
 
-MIT Copyright (c) 2016-2018 **blacktop**
+MIT Copyright (c) 2015 **blacktop**
