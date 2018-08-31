@@ -18,5 +18,5 @@ $ docker run --rm \
              -e MALICE_ELASTICSEARCH_URL=$MALICE_ELASTICSEARCH_URL \
              -e MALICE_ELASTICSEARCH_USERNAME=$MALICE_ELASTICSEARCH_USERNAME \
              -e MALICE_ELASTICSEARCH_PASSORD=$MALICE_ELASTICSEARCH_PASSORD \
-              malice/nsrl -V lookup --elasitcsearch=elasticsearch SHA1_HASH
+              malice/nsrl -V lookup SHA1_HASH
 ```
