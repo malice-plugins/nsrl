@@ -8,7 +8,9 @@ $ docker run -d --name elasticsearch \
                 -p 9200:9200 \
                 -v malice:/usr/share/elasticsearch/data \
                  blacktop/elasticsearch
-$ docker run --rm --link elasticsearch malice/nsrl HASH
+$ docker run --rm --link elasticsearch \
+             -e MALICE_ELASTICSEARCH_URL=http://elasticsearch:9200 \
+             malice/nsrl HASH
 ```
 
 ## Write to an external `elasticsearch` database
