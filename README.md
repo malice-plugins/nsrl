@@ -22,7 +22,10 @@ malice/nsrl         sha1                51.3MB
 malice/nsrl         md5                 51.3MB
 ```
 
-> **NOTE:** tag `sha1` can query by sha1 hash and tag `md5` can query by md5 hash
+> **NOTE:**
+>
+> - tag `sha1` can query by sha1 hash
+> - tag `md5` can query by md5 hash
 
 ## Installation
 
