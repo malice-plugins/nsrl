@@ -65,7 +65,7 @@ func (db *Database) getURL() {
 		return
 	}
 
-	db.URL = fmt.Sprintf("http://%s:%s", db.Host, db.Port)
+	db.URL = utils.Getopts(db.URL, "MALICE_ELASTICSEARCH_URL", fmt.Sprintf("http://%s:%s", db.Host, db.Port))
 }
 
 // Init initalizes ElasticSearch for use with malice

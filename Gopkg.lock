@@ -48,7 +48,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:e22bff4174f70e5ebaeb9f22b2a672712f1b00e54029c961446c9f96b7a927d0"
+  digest = "1:ca82142b12c9d1bde264e8674ea812aab090e671e2a68b5d172175c7ba11c05a"
   name = "github.com/malice-plugins/go-plugin-utils"
   packages = [
     "database",
@@ -56,7 +56,7 @@
     "utils",
   ]
   pruneopts = "UT"
-  revision = "baa0a5b845f02ed8607400fab816bbf08d8e9d7b"
+  revision = "5f30769197c9760919beb5f2b7df4030f95c1598"
 
 [[projects]]
   branch = "master"
