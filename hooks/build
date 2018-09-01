@@ -1,11 +1,13 @@
 #!/bin/bash
 
-# echo " > Building the sha1 tag"
-# docker build --build-arg HASH=sha1 -t $DOCKER_REPO:sha1 .
-# echo "\t*Pushing $DOCKER_REPO:sha1"
-# docker push $DOCKER_REPO:sha1
+set -e
 
-echo " > Building the md5 tag"
-docker build --build-arg HASH=md5 -t $DOCKER_REPO:md5 .
-echo "\t*Pushing $DOCKER_REPO:md5"
+echo " > Building the sha1 tag..."
+docker build -t $IMAGE_NAME .
+echo "  * Pushing $IMAGE_NAME"
+docker push $IMAGE_NAME
+
+echo " > Building the md5 tag..."
+docker build --build-arg HASH=md5 -t $IMAGE_NAME:md5 .
+echo "  * Pushing $IMAGE_NAME:md5"
 docker push $DOCKER_REPO:md5
