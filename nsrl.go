@@ -107,9 +107,35 @@ func lineCounter(r io.Reader) (uint64, error) {
 	}
 }
 
+func getNSRLFieldFromHashType() int {
+	switch strings.ToLower(HashType) {
+	case "sha1":
+		return 0
+	case "md5":
+		return 1
+	case "crc32":
+		return 2
+	case "filename":
+		return 3
+	case "filesize":
+		return 4
+	case "productcode":
+		return 5
+	case "opsystemcode":
+		return 6
+	case "specialcode":
+		return 7
+	default:
+		log.Fatal(fmt.Errorf("hash type %s not supported", HashType))
+	}
+	return -1
+}
+
 // build bloomfilter from NSRL database
 func buildFilter() {
 	var err error
+	nsrlField := getNSRLFieldFromHashType()
+
 	// open NSRL database
 	nsrlDB, err := os.Open("NSRLFile.txt")
 	utils.Assert(err)
@@ -146,7 +172,7 @@ func buildFilter() {
 		utils.Assert(err)
 
 		// log.Debug(record)
-		filter.Add([]byte(record[sha1]))
+		filter.Add([]byte(record[nsrlField]))
 	}
 
 	bloomFile, err := os.Create("nsrl.bloom")
@@ -191,18 +217,18 @@ func lookUp(hash string, timeout int) ResultsData {
 
 func webService() {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/lookup/{sha1}", webLookUp)
+	router.HandleFunc("/lookup/{hash}", webLookUp)
 	log.Info("web service listening on port :3993")
 	log.Fatal(http.ListenAndServe(":3993", router))
 }
 
 func webLookUp(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	hash := vars["sha1"]
+	hash := vars["hash"]
 
 	hashType, _ := utils.GetHashType(hash)
 
-	if strings.EqualFold(hashType, "sha1") {
+	if strings.EqualFold(hashType, strings.ToUpper(HashType)) {
 		nsrl := Nsrl{Results: lookUp(strings.ToUpper(hash), 10)}
 
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -217,7 +243,7 @@ func webLookUp(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintln(w, "Please supply a proper SHA1 hash to query")
+		fmt.Fprintf(w, "Please supply a proper %s hash to query", strings.ToUpper(HashType))
 	}
 }
 
@@ -271,7 +297,7 @@ func main() {
 			Name:      "lookup",
 			Aliases:   []string{"l"},
 			Usage:     "Query NSRL for hash",
-			ArgsUsage: "SHA1 to query NSRL with",
+			ArgsUsage: fmt.Sprintf("%s to query NSRL with", strings.ToUpper(HashType)),
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:        "elasticsearch",
@@ -306,8 +332,8 @@ func main() {
 					hash := strings.ToUpper(c.Args().First())
 					hashType, _ := utils.GetHashType(hash)
 
-					if !strings.EqualFold(hashType, "sha1") {
-						log.Fatal(fmt.Errorf("please supply a valid SHA1 hash to query NSRL with"))
+					if !strings.EqualFold(hashType, strings.ToUpper(HashType)) {
+						log.Fatal(fmt.Errorf("please supply a valid %s hash to query NSRL with", strings.ToUpper(HashType)))
 					}
 
 					if c.GlobalBool("verbose") {
@@ -356,7 +382,7 @@ func main() {
 						fmt.Println(string(nsrlJSON))
 					}
 				} else {
-					log.Fatal(fmt.Errorf("please supply a SHA1 hash to query NSRL with"))
+					log.Fatal(fmt.Errorf("please supply a %s hash to query NSRL with", strings.ToUpper(HashType)))
 				}
 				return nil
 			},

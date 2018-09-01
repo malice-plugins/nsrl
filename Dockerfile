@@ -37,7 +37,7 @@ RUN apk add --no-cache -t .build-deps \
   && dep ensure \
   && go build -ldflags "-s -w -X main.HashType=${HASH} \
   -X main.ErrorRate=$(cat ERROR) \
-  -X main.Version=$(cat VERSION) \
+  -X main.Version=v$(cat VERSION) \
   -X main.BuildTime=$(date -u +%Y%m%d)" -o /bin/nsrl \
   && echo "===> Creating bloomfilter from NSRL database..." \
   && /nsrl/shrink_nsrl.sh \
