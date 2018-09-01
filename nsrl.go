@@ -226,24 +226,27 @@ func webLookUp(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	hash := vars["hash"]
 
-	hashType, _ := utils.GetHashType(hash)
-
-	if strings.EqualFold(hashType, strings.ToUpper(HashType)) {
-		nsrl := Nsrl{Results: lookUp(strings.ToUpper(hash), 10)}
-
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		if nsrl.Results.Found {
-			w.WriteHeader(http.StatusOK)
-		} else {
-			w.WriteHeader(http.StatusNotFound)
+	if utils.StringInSlice(HashType, []string{"md5", "sha1"}) {
+		hashType, _ := utils.GetHashType(hash)
+		if !strings.EqualFold(hashType, strings.ToUpper(HashType)) {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(w, "Please supply a proper %s hash to query", strings.ToUpper(HashType))
+			return
 		}
+	}
 
-		if err := json.NewEncoder(w).Encode(nsrl); err != nil {
-			panic(err)
-		}
+	nsrl := Nsrl{Results: lookUp(strings.ToUpper(hash), 10)}
+	nsrl.Results.Hash = hash
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	if nsrl.Results.Found {
+		w.WriteHeader(http.StatusOK)
 	} else {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Please supply a proper %s hash to query", strings.ToUpper(HashType))
+		w.WriteHeader(http.StatusNotFound)
+	}
+
+	if err := json.NewEncoder(w).Encode(nsrl); err != nil {
+		panic(err)
 	}
 }
 
@@ -330,10 +333,13 @@ func main() {
 			Action: func(c *cli.Context) error {
 				if c.Args().Present() {
 					hash := strings.ToUpper(c.Args().First())
-					hashType, _ := utils.GetHashType(hash)
 
-					if !strings.EqualFold(hashType, strings.ToUpper(HashType)) {
-						log.Fatal(fmt.Errorf("please supply a valid %s hash to query NSRL with", strings.ToUpper(HashType)))
+					if utils.StringInSlice(HashType, []string{"md5", "sha1"}) {
+						hashType, _ := utils.GetHashType(hash)
+
+						if !strings.EqualFold(hashType, strings.ToUpper(HashType)) {
+							log.Fatal(fmt.Errorf("please supply a valid %s hash to query NSRL with", strings.ToUpper(HashType)))
+						}
 					}
 
 					if c.GlobalBool("verbose") {
