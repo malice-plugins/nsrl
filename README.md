@@ -16,14 +16,15 @@ This repository contains a **Dockerfile** of the [NSRL](http://www.nsrl.nist.gov
 
 ```
 REPOSITORY          TAG                 SIZE
-malice/nsrl         latest              51.9MB
-malice/nsrl         0.1.0               51.9MB
-malice/nsrl         sha1                51.3MB
-malice/nsrl         md5                 51.3MB
+malice/nsrl         latest              117MB
+malice/nsrl         0.1.0               117MB
+malice/nsrl         sha1                117MB
+malice/nsrl         md5                 117MB
 ```
 
 > **NOTE:**
 >
+> - tags `latest` and `0.1.0` are the same as `sha1`
 > - tag `sha1` can query by sha1 hash
 > - tag `md5` can query by md5 hash
 
@@ -63,8 +64,8 @@ Run 'nsrl COMMAND --help' for more information on a command.
 ### Lookup By Hash `md5|sha1`
 
 ```
-docker run --rm malice/nsrl:md5 lookup MD5
-docker run --rm malice/nsrl:sha1 lookup SHA1
+docker run --rm malice/nsrl:md5 lookup 829e4805b0e12b383ee09abdc9e2dc3c
+docker run --rm malice/nsrl:sha1 lookup 5a272b7441328e09704b6d7eabdbd51b8858fde4
 ```
 
 ```

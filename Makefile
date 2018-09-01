@@ -11,7 +11,11 @@ all: build size tag test_all
 
 .PHONY: build
 build:
-	cd $(VERSION); docker build -t $(ORG)/$(NAME):$(VERSION) .
+	docker build -t $(ORG)/$(NAME):$(VERSION) .
+
+.PHONY: build.md5
+build.md5:
+	docker build --build-arg HASH=md5 -t $(ORG)/$(NAME):md5 .
 
 .PHONY: size
 size:
