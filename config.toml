@@ -1,0 +1,15 @@
+# malice/nsrl plugin configuration.
+
+name = 'nsrl'
+description = 'nsrl - Malice NSRL Plugin'
+category = 'intel'
+version = '0.1.0'
+
+accepts = [ 'hash' ]
+hashtypes = [ 'md5', 'sha1' ]
+
+[system]
+cpu = 0.5
+ram = 256 # MB
+
+[settings]
