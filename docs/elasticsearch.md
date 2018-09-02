@@ -7,7 +7,7 @@ $ docker volume create --name malice
 $ docker run -d --name elasticsearch \
                 -p 9200:9200 \
                 -v malice:/usr/share/elasticsearch/data \
-                 blacktop/elasticsearch
+                 blacktop/elasticsearch:6
 $ docker run --rm --link elasticsearch \
              -e MALICE_ELASTICSEARCH_URL=http://elasticsearch:9200 \
              malice/nsrl HASH
