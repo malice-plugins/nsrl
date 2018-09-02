@@ -113,7 +113,8 @@ ci-size: ci-build
 clean:
 	docker-clean stop
 	docker rmi $(ORG)/$(NAME):$(VERSION)
-	docker rmi $(ORG)/$(NAME):base
+	docker rmi $(ORG)/$(NAME):latest
+
 
 # Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:
