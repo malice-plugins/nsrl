@@ -48,7 +48,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:ca82142b12c9d1bde264e8674ea812aab090e671e2a68b5d172175c7ba11c05a"
+  digest = "1:b39f8c8211af9b8ff76c95c1da91a5174cb979a446713d43f63bc4b59caad8a6"
   name = "github.com/malice-plugins/go-plugin-utils"
   packages = [
     "database",
@@ -56,7 +56,7 @@
     "utils",
   ]
   pruneopts = "UT"
-  revision = "5f30769197c9760919beb5f2b7df4030f95c1598"
+  revision = "9ee76663c3b0a531b8c529f03f12a5a84ff9b61b"
 
 [[projects]]
   branch = "master"
@@ -101,6 +101,14 @@
   pruneopts = "UT"
   revision = "9f5d223c60793748f04a9d5b4b4eacddfc1f755d"
   version = "v1.1"
+
+[[projects]]
+  digest = "1:b24d38b282bacf9791408a080f606370efa3d364e4b5fd9ba0f7b87786d3b679"
+  name = "github.com/urfave/cli"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
+  version = "v1.20.0"
 
 [[projects]]
   digest = "1:211f9cf21d532e2da93a420426d714af492743f4c602389cb0cd14ec8eebe256"
@@ -171,14 +179,6 @@
   revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
   version = "v0.3.0"
 
-[[projects]]
-  digest = "1:b24d38b282bacf9791408a080f606370efa3d364e4b5fd9ba0f7b87786d3b679"
-  name = "gopkg.in/urfave/cli.v1"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
-  version = "v1.20.0"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
@@ -191,8 +191,8 @@
     "github.com/malice-plugins/go-plugin-utils/utils",
     "github.com/parnurzeal/gorequest",
     "github.com/pkg/errors",
+    "github.com/urfave/cli",
     "github.com/willf/bloom",
-    "gopkg.in/urfave/cli.v1",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

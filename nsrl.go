@@ -23,8 +23,8 @@ import (
 	"github.com/malice-plugins/go-plugin-utils/utils"
 	"github.com/parnurzeal/gorequest"
 	"github.com/pkg/errors"
+	"github.com/urfave/cli"
 	"github.com/willf/bloom"
-	"gopkg.in/urfave/cli.v1"
 )
 
 var (
@@ -39,6 +39,9 @@ var (
 
 	// HashType is the type of hash to use to build the bloomfilter
 	HashType string
+
+	// es is the elasticsearch database object
+	es elasticsearch.Database
 )
 
 const (
@@ -255,8 +258,6 @@ func printStatus(resp gorequest.Response, body string, errs []error) {
 }
 
 func main() {
-
-	es := elasticsearch.Database{Index: utils.Getopt("MALICE_ELASTICSEARCH_INDEX", "malice"), Type: "samples"}
 
 	cli.AppHelpTemplate = utils.AppHelpTemplate
 	app := cli.NewApp()

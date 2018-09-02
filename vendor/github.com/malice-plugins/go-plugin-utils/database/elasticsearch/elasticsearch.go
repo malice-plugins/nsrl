@@ -27,12 +27,16 @@ type Database struct {
 }
 
 var (
-	defaultHost string
-	defaultPort string
-	defaultURL  string
+	defaultIndex string
+	defaultType  string
+	defaultHost  string
+	defaultPort  string
+	defaultURL   string
 )
 
 func init() {
+	defaultIndex = utils.Getopt("MALICE_ELASTICSEARCH_INDEX", "malice")
+	defaultType = utils.Getopt("MALICE_ELASTICSEARCH_TYPE", "samples")
 	defaultHost = utils.Getopt("MALICE_ELASTICSEARCH_HOST", "localhost")
 	defaultPort = utils.Getopt("MALICE_ELASTICSEARCH_PORT", "9200")
 	defaultURL = utils.Getopt("MALICE_ELASTICSEARCH_URL", fmt.Sprintf("http://%s:%s", defaultHost, defaultPort))
@@ -45,6 +49,12 @@ func init() {
 func (db *Database) getURL() {
 
 	// If not set use defaults
+	if len(strings.TrimSpace(db.Index)) == 0 {
+		db.Index = defaultIndex
+	}
+	if len(strings.TrimSpace(db.Type)) == 0 {
+		db.Type = defaultType
+	}
 	if len(strings.TrimSpace(db.Host)) == 0 {
 		db.Host = defaultHost
 	}
