@@ -44,7 +44,7 @@ ifeq ("$(shell docker inspect -f {{.State.Running}} elasticsearch)", "true")
 	@docker rm -f elasticsearch || true
 endif
 	@echo "===> Starting elasticsearch"
-	@docker run --init -d --name elasticsearch -p 9200:9200 malice/elasticsearch:6.3; sleep 15
+	@docker run --init -d --name elasticsearch -p 9200:9200 malice/elasticsearch:6.4; sleep 15
 
 .PHONY: test_all
 test_all: test test_elastic test_markdown test_web
@@ -63,9 +63,9 @@ test:
 .PHONY: test_elastic
 test_elastic: start_elasticsearch
 	@echo "===> ${NAME} test_elastic"
-	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH_URL=http://elasticsearch:9200 $(ORG)/$(NAME):$(VERSION) -V lookup $(FOUND_HASH)
+	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH_URL=elasticsearch:9200 $(ORG)/$(NAME):$(VERSION) -V lookup $(FOUND_HASH)
 	@echo "===> ${NAME} test_elastic NOT found"
-	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH_URL=http://elasticsearch:9200 $(ORG)/$(NAME):$(VERSION) -V lookup $(MISSING_HASH)
+	docker run --rm --link elasticsearch -e MALICE_ELASTICSEARCH_URL=elasticsearch:9200 $(ORG)/$(NAME):$(VERSION) -V lookup $(MISSING_HASH)
 	http localhost:9200/malice/_search | jq . > docs/elastic.json
 
 .PHONY: test_elastic_remote
