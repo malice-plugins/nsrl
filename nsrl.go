@@ -78,6 +78,16 @@ type ResultsData struct {
 	MarkDown string `json:"markdown,omitempty" structs:"markdown,omitempty"`
 }
 
+func assert(err error) {
+	if err != nil {
+		log.WithFields(log.Fields{
+			"plugin":   name,
+			"category": category,
+			"path":     path,
+		}).Fatal(err)
+	}
+}
+
 func generateMarkDownTable(n Nsrl) string {
 	var tplOut bytes.Buffer
 
@@ -141,26 +151,26 @@ func buildFilter() {
 
 	// open NSRL database
 	nsrlDB, err := os.Open("NSRLFile.txt")
-	utils.Assert(err)
+	assert(err)
 	defer nsrlDB.Close()
 	// count lines in NSRL database
 	lines, err := lineCounter(nsrlDB)
-	utils.Assert(err)
+	assert(err)
 	log.Debugf("Number of lines in NSRLFile.txt: %d", lines)
 	// write line count to file LINECOUNT
 	buf := new(bytes.Buffer)
-	utils.Assert(binary.Write(buf, binary.LittleEndian, lines))
-	utils.Assert(ioutil.WriteFile("LINECOUNT", buf.Bytes(), 0644))
+	assert(binary.Write(buf, binary.LittleEndian, lines))
+	assert(ioutil.WriteFile("LINECOUNT", buf.Bytes(), 0644))
 
 	// Create new bloomfilter with size = number of lines in NSRL database
 	erate, err := strconv.ParseFloat(ErrorRate, 64)
-	utils.Assert(err)
+	assert(err)
 
 	filter := bloom.NewWithEstimates(uint(lines), erate)
 
 	// jump back to the begining of the file
 	_, err = nsrlDB.Seek(0, io.SeekStart)
-	utils.Assert(err)
+	assert(err)
 
 	log.Debug("Loading NSRL database into bloomfilter")
 	reader := csv.NewReader(nsrlDB)
@@ -172,19 +182,19 @@ func buildFilter() {
 		if err == io.EOF {
 			break
 		}
-		utils.Assert(err)
+		assert(err)
 
 		// log.Debug(record)
 		filter.Add([]byte(record[nsrlField]))
 	}
 
 	bloomFile, err := os.Create("nsrl.bloom")
-	utils.Assert(err)
+	assert(err)
 	defer bloomFile.Close()
 
 	log.Debug("Writing bloomfilter to disk")
 	_, err = filter.WriteTo(bloomFile)
-	utils.Assert(err)
+	assert(err)
 }
 
 // lookUp queries the NSRL bloomfilter for a hash
@@ -195,22 +205,22 @@ func lookUp(hash string, timeout int) ResultsData {
 
 	// read line count from file LINECOUNT
 	lineCount, err := ioutil.ReadFile("LINECOUNT")
-	utils.Assert(err)
+	assert(err)
 	buf := bytes.NewReader(lineCount)
-	utils.Assert(binary.Read(buf, binary.LittleEndian, &lines))
+	assert(binary.Read(buf, binary.LittleEndian, &lines))
 	log.Debugf("Number of lines in NSRLFile.txt: %d", lines)
 
 	// Create new bloomfilter with size = number of lines in NSRL database
 	erate, err := strconv.ParseFloat(ErrorRate, 64)
-	utils.Assert(err)
+	assert(err)
 
 	filter := bloom.NewWithEstimates(uint(lines), erate)
 
 	// load NSRL bloomfilter from file
 	f, err := os.Open("nsrl.bloom")
-	utils.Assert(err)
+	assert(err)
 	_, err = filter.ReadFrom(f)
-	utils.Assert(err)
+	assert(err)
 
 	// test of existance of hash in bloomfilter
 	nsrlResults.Found = filter.TestString(hash)
@@ -373,7 +383,7 @@ func main() {
 					} else {
 						nsrl.Results.MarkDown = ""
 						nsrlJSON, err := json.Marshal(nsrl)
-						utils.Assert(err)
+						assert(err)
 						if c.Bool("post") {
 							request := gorequest.New()
 							if c.Bool("proxy") {
@@ -397,5 +407,5 @@ func main() {
 	}
 
 	err := app.Run(os.Args)
-	utils.Assert(err)
+	assert(err)
 }
