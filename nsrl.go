@@ -39,7 +39,7 @@ var (
 
 	// HashType is the type of hash to use to build the bloomfilter
 	HashType string
-
+	hash     string
 	// es is the elasticsearch database object
 	es elasticsearch.Database
 )
@@ -83,7 +83,7 @@ func assert(err error) {
 		log.WithFields(log.Fields{
 			"plugin":   name,
 			"category": category,
-			"path":     path,
+			"hash":     hash,
 		}).Fatal(err)
 	}
 }
@@ -343,7 +343,7 @@ func main() {
 			},
 			Action: func(c *cli.Context) error {
 				if c.Args().Present() {
-					hash := strings.ToUpper(c.Args().First())
+					hash = strings.ToUpper(c.Args().First())
 
 					if utils.StringInSlice(HashType, []string{"md5", "sha1"}) {
 						hashType, _ := utils.GetHashType(hash)
