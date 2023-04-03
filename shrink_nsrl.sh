@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# copyright: (c) 2014 by Josh "blacktop" Maine.
+# copyright: (c) 2014 - 2023 blacktop
 # license: MIT
 
 set -ex
